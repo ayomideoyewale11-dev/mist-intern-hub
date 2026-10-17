@@ -1,0 +1,14 @@
+//- Task status as a coloured circle with a symbol: dash on grey (open), check on
+//- green (submitted), cross on red (overdue). Used by every page that lists tasks.
+//-   +statusIcon(status)        icon only; the word is a tooltip and read by screen readers
+//-   +statusIcon(status, text)  icon followed by visible text (the task page)
+mixin statusIcon(status, text)
+  - const word = status === 'open' ? 'Open' : status === 'overdue' ? 'Overdue' : 'Submitted'
+  - const glyph = status === 'submitted' ? 'M5 12.5l4.5 4.5L19 7.5' : status === 'overdue' ? 'M6 6l12 12M18 6L6 18' : 'M6 12h12'
+  - const attrs = text ? { 'aria-hidden': 'true' } : { title: word, role: 'img', 'aria-label': word }
+  span(class=(text ? 'st-with' : false))
+    span.st-icon(class=`is-${status}`)&attributes(attrs)
+      svg(width='16', height='16', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='3.2', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+        path(d=glyph)
+    if text
+      span= text

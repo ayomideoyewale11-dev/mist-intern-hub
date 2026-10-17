@@ -1,0 +1,34 @@
+//- Black header with a slide-out menu (the "hub" look). Needs `user` and `currentPath`.
+//- The menu is toggled by public/js/hubMenu.js; the Log out button's id is what
+//- authClient.js looks for, so logging out works without extra code.
+mixin menuLink(href, label, active)
+  - const here = active !== undefined ? active : currentPath === href
+  a(href=href, aria-current=(here ? 'page' : false), class=(here ? 'is-current' : false))= label
+
+- const inInterns = currentPath === '/interns' || currentPath === '/interns/new' || (currentPath.startsWith('/interns/') && currentPath.endsWith('/edit'))
+
+header.hh
+  .hh-bar
+    a.hh-brand(href=user.role === 'admin' ? '/admin' : '/intern')
+      img.hh-crest(src='/images/crest.png', alt='Lagos State crest', width='44', height='44')
+      span.hh-name Lagos State Ministry of Innovation, Science &amp; Technology
+    button#menu-btn.hh-toggle(type='button', aria-expanded='false', aria-controls='site-menu')
+      svg.ic-burger(width='22', height='22', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', aria-hidden='true')
+        path(d='M3 7h18M3 12h18M3 17h18')
+      svg.ic-close(width='22', height='22', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', aria-hidden='true')
+        path(d='M6 6l12 12M18 6L6 18')
+      span.hh-toggle-label Menu
+
+  nav#site-menu.hh-menu(hidden, aria-label='Main menu')
+    if user.role === 'admin'
+      +menuLink('/admin', 'Dashboard')
+      +menuLink('/archive', 'Archive')
+      +menuLink('/audit-log', 'Audit Log')
+      +menuLink('/alumni', 'Alumni')
+      +menuLink('/interns', 'Interns', inInterns)
+      +menuLink('/account', 'Account')
+    else
+      +menuLink('/intern', 'My Tasks')
+      +menuLink('/my-history', 'My History')
+      +menuLink('/account', 'Account')
+    button#logout-btn.hh-logout(type='button') Log Out

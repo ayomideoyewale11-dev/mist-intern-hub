@@ -1,0 +1,42 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/login.css')
+
+block content
+  .login
+    a.lg-back(href='/')
+      svg(width='24', height='24', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+        path(d='M19 12H5M11 6l-6 6 6 6')
+      span Back to home
+
+    main.lg-main
+      .lg-card
+        .lg-head
+          h1 Welcome
+          p Log in with your email and password to continue.
+
+        form#login-form
+          .lg-field
+            label(for='email') Email
+            input#email(type='email', required, autocomplete='username')
+
+          .lg-field
+            label(for='password') Password
+            .lg-pw
+              input#password(type='password', required, autocomplete='current-password')
+              button.lg-eye(type='button', aria-label='Show password', aria-pressed='false')
+                svg(width='20', height='20', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+                  path(d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z')
+                  circle(cx='12', cy='12', r='3')
+
+          button.lg-submit(type='submit') Log in
+          p.form-status#form-status(role='status', aria-live='polite')
+
+        a.lg-forgot(href='/forgot-password') Forgot your password?
+
+        p.lg-note There is no public sign-up. Interns are registered by their supervisor, who sets up their account by email.
+
+block scripts
+  script(src='/js/authClient.js')
+  script(src='/js/pwToggle.js')

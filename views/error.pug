@@ -1,0 +1,22 @@
+extends layout
+
+//- Used for "not found" and "something went wrong", for anyone, logged in or not,
+//- so it has the brand bar but no menu.
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  .hub
+    header.hh
+      .hh-bar
+        a.hh-brand(href='/')
+          img.hh-crest(src='/images/crest.png', alt='Lagos State crest', width='44', height='44')
+          span.hh-name Lagos State Ministry of Innovation, Science &amp; Technology
+
+    main.hub-main
+      .hub-title
+        h1= title
+        p= message
+      p.err-actions
+        a.tb-btn(href='/') Go to my page

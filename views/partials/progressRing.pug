@@ -1,0 +1,15 @@
+//- A ring showing how many tasks are submitted (green), overdue (red) and open (grey),
+//- with the percentage submitted in the middle. r = 15.9155 makes the circle 100 units
+//- around, so each arc's length is its share in percent. It starts at the top.
+//- r: the numbers from config/progress.js ringData(); label: what screen readers read.
+mixin progressRing(r, label)
+  svg.hub-ring(viewBox='0 0 36 36', role='img', aria-label=`${label}: ${r.done} done, ${r.open} open, ${r.overdue} overdue`)
+    title= `${r.done} done, ${r.open} open, ${r.overdue} overdue`
+    circle.ring-track(cx='18', cy='18', r='15.9155', fill='none', stroke-width='4')
+    if r.doneArc > 0
+      circle.ring-done(cx='18', cy='18', r='15.9155', fill='none', stroke-width='4', transform='rotate(-90 18 18)', stroke-dasharray=`${r.doneArc} ${100 - r.doneArc}`, stroke-dashoffset='0')
+    if r.overdueArc > 0
+      circle.ring-overdue(cx='18', cy='18', r='15.9155', fill='none', stroke-width='4', transform='rotate(-90 18 18)', stroke-dasharray=`${r.overdueArc} ${100 - r.overdueArc}`, stroke-dashoffset=`${-r.doneArc}`)
+    if r.openArc > 0
+      circle.ring-open(cx='18', cy='18', r='15.9155', fill='none', stroke-width='4', transform='rotate(-90 18 18)', stroke-dasharray=`${r.openArc} ${100 - r.openArc}`, stroke-dashoffset=`${-(r.doneArc + r.overdueArc)}`)
+    text.ring-pct(x='18', y='18', text-anchor='middle', dominant-baseline='central')= r.percent === null ? '–' : `${r.percent}%`

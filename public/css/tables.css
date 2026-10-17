@@ -1,0 +1,96 @@
+/* Tables for the Alumni and Audit log pages. Loaded after hub.css.
+   Phones get the narrow table, 768px and up gets the wide one. */
+
+.tb-count{ text-align: left; margin: 0 0 12px; color: #6B6B6B; font-size: 0.9375rem; }
+.tb-empty{ text-align: center; color: #6B6B6B; font-size: 1.0625rem; padding: 40px 0; }
+
+.tb-card{ background: #fff; border: 1px solid #000; overflow-x: auto; }
+.tb-wide{ display: none; }
+.tb-narrow{ display: block; }
+
+.tb{ width: 100%; border-collapse: collapse; font-size: 0.9375rem; color: #000; }
+.tb thead th{
+  background: #000; color: #fff; text-align: left;
+  font-size: 0.875rem; font-weight: 600; padding: 12px 14px; white-space: nowrap;
+}
+.tb tbody td{
+  padding: 14px; border-top: 1px solid #D9D2CF; vertical-align: top; line-height: 1.4;
+}
+.tb tbody tr:first-child td{ border-top: 0; }
+.tb-strong{ font-weight: 600; }
+.tb-nowrap{ white-space: nowrap; }
+.tb-break{ overflow-wrap: anywhere; word-break: break-word; }
+.tb-sub{ display: block; margin-top: 2px; color: #6B6B6B; font-size: 0.875rem; overflow-wrap: anywhere; }
+.tb-line{ display: block; margin-top: 6px; }
+.tb-act{ text-align: right; white-space: nowrap; }
+.tb-chev{ width: 24px; text-align: right; font-size: 1.5rem; line-height: 1; color: #6B6B6B; }
+
+.hub a.tb-link, .hub a.tb-rowlink{ color: #000; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.hub a.tb-link:hover, .hub a.tb-rowlink:hover{ color: #137333; }
+.hub a.tb-rowlink{ display: inline-block; text-decoration: none; }
+
+.tb-sr{
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.tb-pill{
+  display: inline-block; padding: 2px 10px; border: 1px solid #000; border-radius: 999px;
+  font-size: 0.8125rem; font-weight: 500; white-space: nowrap;
+}
+.tb-pill.is-bad{ color: #A8391E; border-color: #A8391E; }
+.tb-pill.is-good{ color: #137333; border-color: #137333; }
+
+.tb-pager{
+  display: flex; justify-content: center; align-items: center; gap: 12px;
+  margin-top: 24px; font-size: 0.9375rem; color: #6B6B6B; flex-wrap: wrap;
+}
+
+/* audit header/column variants: simplest on small screens */
+.tb-when-long, .tb-subj-long, .tb-by-long, .tb-col-details{ display: none; }
+.tb-inline-details{ display: block; }
+
+@media (min-width: 768px){
+  .tb-wide{ display: block; }
+  .tb-narrow{ display: none; }
+  .tb-count{ font-size: 1rem; }
+  .tb{ font-size: 1rem; }
+  .tb thead th{ padding: 14px 18px; font-size: 0.9375rem; }
+  .tb tbody td{ padding: 16px 18px; }
+}
+
+@media (min-width: 1100px){
+  .tb-when-long, .tb-subj-long, .tb-by-long{ display: inline; }
+  .tb-when-short, .tb-subj-short, .tb-by-short{ display: none; }
+  th.tb-col-details, td.tb-col-details{ display: table-cell; }
+  .tb-inline-details{ display: none; }
+}
+
+@media (max-width: 359px){
+  .tb thead th, .tb tbody td{ padding-left: 10px; padding-right: 10px; }
+  .tb{ font-size: 0.875rem; }
+}
+
+/* Interns page: count on the left, Register button on the right */
+.tb-bar{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.tb-bar .tb-count{ margin: 0; }
+.hub a.tb-btn{
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px;
+  background: #000; color: #fff; font-weight: 600; font-size: 1rem; text-decoration: none;
+}
+.hub a.tb-btn:hover{ background: #222; color: #fff; }
+.tb-sep{ margin: 0 8px; color: #6B6B6B; }
+
+/* Interns page when there are no interns at all: a message and one button, centred */
+.tb-start{ display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 48px 0 24px; text-align: center; }
+.tb-start-text{ margin: 0; max-width: 34ch; color: #000; font-size: 1.0625rem; line-height: 1.5; }
+.hub a.tb-start-btn{
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  width: 100%; max-width: 320px; min-height: 52px; padding: 0 24px;
+  background: #000; color: #fff; text-decoration: none; font-size: 1.1875rem; font-weight: 600;
+}
+.hub a.tb-start-btn:hover{ background: #222; color: #fff; }
+@media (min-width: 768px){
+  .tb-start{ padding-top: 80px; }
+  .tb-start-text{ max-width: none; font-size: 1.25rem; }
+}

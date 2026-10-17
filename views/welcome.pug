@@ -1,0 +1,80 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/welcome.css')
+
+block content
+  include partials/statusIcon
+  .welcome
+    header.wl-header
+      .wl-container.wl-header-bar
+        .wl-brand
+          img.wl-crest(src='/images/crest.png', alt='Lagos State crest', width='44', height='44')
+          span.wl-ministry Lagos State Ministry of Innovation, Science &amp; Technology
+        a.wl-login(href='/login') Log in
+
+    main
+      section.wl-hero
+        .wl-container
+          h1 MIST Intern Hub
+          p.wl-lead Your internship tasks, all in one place. See what your supervisor has assigned, hand in your work as a document or a link and read their feedback when it arrives.
+
+          .wl-tasks(aria-label='Example tasks')
+            article.wl-card
+              .wl-card-top
+                span.wl-card-label Assigned by your supervisor
+                +statusIcon('open', 'Open')
+              h2 Build a login page
+              p.wl-muted Use the house style and push your work to a GitHub repo.
+              .wl-card-foot
+                span Due 12 Dec 2026
+                span.wl-fake-btn Submit work
+
+            article.wl-card
+              .wl-card-top
+                span.wl-card-label Feedback received
+                +statusIcon('submitted', 'Submitted')
+              h2 Read the style guide
+              p.wl-muted Clear summary. Next time, add an example for each rule.
+
+      section#how-it-works.wl-how
+        .wl-container
+          h2 How it works
+          p.wl-muted.wl-how-sub Three steps, from task to feedback.
+
+          .wl-steps
+            .wl-step
+              svg(width='56', height='56', viewBox='0 0 24 24', fill='currentColor', aria-hidden='true')
+                path(fill-rule='evenodd', d='M9 2h6a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1zm1 2v2h4V4h-4zM8 11h2v2H8v-2zm4 0h4v2h-4v-2zm-4 4h2v2H8v-2zm4 0h4v2h-4v-2z')
+              h3 1. Get your tasks
+              p.wl-muted Your supervisor assigns tasks with a due date. You'll get an email, and the task shows up on your page.
+
+            .wl-step
+              svg(width='56', height='56', viewBox='0 0 24 24', fill='currentColor', aria-hidden='true')
+                path(d='M6 2h8l6 6v6.2a5 5 0 0 0-7.6 5.8H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5z')
+                path(d='m14.6 19.2 2.1 2.1 4-4.2', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
+              h3 2. Submit your work
+              p.wl-muted Upload a PDF, Word or Excel file, add a link such as a GitHub repo, or both. Each task is submitted once, so check it first.
+
+            .wl-step
+              svg(width='56', height='56', viewBox='0 0 24 24', fill='currentColor', aria-hidden='true')
+                path(fill-rule='evenodd', d='M5 3h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H10l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm3 5v2h8V8H8zm0 4v2h5v-2H8z')
+              h3 3. Read the feedback
+              p.wl-muted Your supervisor reviews what you sent and leaves feedback. Find it any time under My History.
+
+    footer.wl-footer
+      .wl-container
+        .wl-footer-grid
+          div
+            h2 MIST Intern Hub
+            p Tasks, submissions and feedback for the internship programme at the Lagos State Ministry of Innovation, Science &amp; Technology.
+          div
+            h2 Quick Links
+            a(href='/login') Log in
+            a(href='#how-it-works') How it works
+          div
+            h2 Need An Account?
+            p There is no public sign-up. Your supervisor registers you and you'll get an email to set your password.
+        .wl-footer-bottom
+          img.wl-crest.wl-crest-lg(src='/images/crest.png', alt='Lagos State crest', width='56', height='56')
+          span &copy; 2026 Lagos State Ministry of Innovation, Science &amp; Technology

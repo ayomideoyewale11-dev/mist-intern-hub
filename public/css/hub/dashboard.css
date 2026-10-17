@@ -1,0 +1,45 @@
+/* ---------- Supervisor home: summary counts ---------- */
+.hub-stats{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 28px; }
+.hub a.hub-stat{
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px 16px;
+  background: #fff; border: 1px solid #000; color: #000; text-decoration: none;
+}
+.hub a.hub-stat:hover{ background: #F1ECEA; }
+.hub-stat strong{ font-size: 1.875rem; line-height: 1; font-weight: 700; }
+.hub a.hub-stat.is-alert strong{ color: #E01B1B; }
+.hub-stat > span{ font-size: 0.9375rem; font-weight: 600; }
+@media (min-width: 768px){ .hub-stats{ grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 36px; } }
+
+/* Intern progress rings on the supervisor dashboard */
+.hub-progress{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 4px 24px; }
+.hub-progress li{ display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid #E7E1DE; }
+.hub-ring{ width: 64px; height: 64px; flex: none; }
+.hub-ring .ring-track{ stroke: #E4E4E4; }
+.hub-ring .ring-open{ stroke: #757575; }
+.hub-ring .ring-done{ stroke: #137333; }
+.hub-ring .ring-overdue{ stroke: #E01B1B; }
+.hub-ring .ring-pct{ font-size: 8px; font-weight: 700; fill: currentColor; }
+.hub-prog-info{ display: flex; flex-direction: column; min-width: 0; }
+.hub .hub-prog-info a{ font-weight: 600; overflow-wrap: anywhere; }
+.hub-prog-count{ font-size: 0.875rem; color: #666; }
+@media (min-width: 768px){ .hub-progress{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* space between the progress card and the Assign a task card below it */
+.hub section.hub-card.hub-progress-card,
+.hub section.hub-card.hub-wait-card,
+.hub section.hub-card.hub-me-card{ margin-bottom: 32px; }
+
+/* Submissions waiting for feedback, on the supervisor dashboard */
+.hub-wait{ list-style: none; margin: 0; padding: 0; }
+.hub-wait li{ display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-bottom: 1px solid #E7E1DE; }
+.hub .hub-wait a{ font-weight: 600; overflow-wrap: anywhere; }
+.hub-wait-meta, .hub-wait-more{ font-size: 0.875rem; color: #666; }
+.hub-wait-more{ margin: 24px 0 0; text-align: center; }
+@media (min-width: 768px){ .hub-wait li{ flex-direction: row; justify-content: space-between; align-items: baseline; gap: 16px; } }
+
+/* The intern's own progress ring on My History */
+.hub-me-card{ display: flex; align-items: center; gap: 20px; }
+.hub-me-card .hub-ring{ width: 88px; height: 88px; }
+.hub-me-card .hub-ring .ring-pct{ font-size: 7.5px; }
+.hub-me-info h2{ margin-bottom: 4px; font-size: 1.25rem; }
+.hub-me-info p{ margin: 0; color: #666; }

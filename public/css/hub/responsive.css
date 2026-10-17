@@ -1,0 +1,41 @@
+/* ---------- tablet ---------- */
+@media (min-width: 768px){
+  .hh-bar{ padding: 14px 40px; }
+  .hh-name{ font-size: 1rem; }
+
+  /* the menu becomes a panel on the right, under the Close button */
+  .hh-menu{
+    position: absolute; top: 0; right: 0; z-index: 1;
+    width: 300px; padding: 84px 16px 24px;
+    background: #000;
+  }
+
+  .hub-main{ padding: 48px 40px 72px; }
+  .hub-title{ margin-bottom: 40px; }
+  .hub-title h1{ font-size: 2.5rem; }
+  .hub-title p{ font-size: 1.1875rem; }
+  .hub section.hub-card{ padding: 40px; }
+  .hub-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .hub-grid .hub-full{ grid-column: 1 / -1; }
+  .hub-submit{ max-width: 320px; }
+}
+
+/* ---------- desktop ---------- */
+@media (min-width: 1100px){
+  .hh-bar{ padding: 16px 56px; }
+  .hh-name{ font-size: 1.25rem; }
+  .hub-main{ padding: 64px 56px 88px; }
+  .hub-title h1{ font-size: 3.25rem; }
+  .hub section.hub-card{ padding: 48px; }
+  .hub-grid{ grid-template-columns: 1.2fr 1.2fr 1fr; gap: 24px; }
+}
+
+/* very small phones */
+@media (max-width: 359px){
+  .hh-bar{ padding: 10px 12px; }
+  .hh-name{ font-size: 0.8125rem; }
+  .hh-toggle{ padding: 0 12px; }
+  .hh-menu{ padding-left: 12px; padding-right: 12px; }
+  .hub-main{ padding-left: 12px; padding-right: 12px; }
+  .hub section.hub-card{ padding: 20px; }
+}

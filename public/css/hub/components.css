@@ -1,0 +1,114 @@
+/* ---------- In-page messages and confirm box (public/js/ui.js) ---------- */
+.ui-toasts{
+  position: fixed; left: 0; right: 0; bottom: 16px; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 16px; pointer-events: none;
+}
+.ui-toast{
+  max-width: 480px; width: 100%; background: #000; color: #fff; padding: 14px 18px;
+  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.4;
+  border: 1px solid #000; pointer-events: auto;
+}
+.ui-toast.is-error{ background: #fff; color: #A8391E; border-color: #A8391E; }
+.ui-dialog{
+  width: calc(100% - 32px); max-width: 440px; padding: 24px; border: 1px solid #000; background: #fff; color: #000;
+  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.5;
+}
+.ui-dialog::backdrop{ background: rgba(0, 0, 0, 0.5); }
+.ui-dialog h2{ margin: 0 0 8px; font-size: 1.375rem; font-weight: 700; }
+.ui-dialog p{ margin: 0 0 24px; color: #3a3a3a; }
+.ui-actions{ display: flex; flex-direction: column-reverse; gap: 12px; }
+.ui-btn{
+  min-height: 48px; padding: 0 20px; border: 1px solid #000; background: #fff; color: #000;
+  font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+}
+.ui-btn:hover{ background: #F1ECEA; }
+.ui-btn-main{ background: #000; color: #fff; }
+.ui-btn-main:hover{ background: #222; }
+.ui-btn-main.is-danger{ background: #A8391E; border-color: #A8391E; }
+.ui-btn-main.is-danger:hover{ background: #8a2f19; }
+.ui-btn:focus-visible{ outline: 2px solid #000; outline-offset: 3px; }
+@media (min-width: 480px){ .ui-actions{ flex-direction: row; justify-content: flex-end; } .ui-btn{ min-width: 120px; } }
+
+/* ---------- Archive: feedback label in its own right-hand column ---------- */
+.hub .arch-fb{ color: #6B6B6B; font-size: 0.875rem; }
+.hub .arch-fb.is-todo{ color: #000; font-weight: 600; }
+.tb th.arch-st, .tb td.arch-st{ width: 1%; white-space: nowrap; }
+.tb th.arch-fbcell, .tb td.arch-fbcell{ text-align: right; }
+@media (min-width: 768px){ .tb td.arch-fbcell{ white-space: nowrap; } }
+
+/* ---------- Dashboard: "Assign to" picker (button + searchable checkbox list) ---------- */
+.pick{ position: relative; }
+.pick-empty{ color: #6B6B6B; margin: 0; padding: 8px 4px; }
+.hub .pick-btn{
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 48px; padding: 0 14px;
+  border: 1px solid #000; background: #fff; color: #000; font-family: inherit; font-size: 1rem; text-align: left; cursor: pointer;
+}
+.pick-btn > span{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-btn svg{ flex: none; transition: transform .15s; }
+.pick-btn.is-open svg{ transform: rotate(180deg); }
+.pick-panel{ position: absolute; z-index: 20; left: 0; right: 0; top: 100%; margin-top: 4px; background: #fff; border: 1px solid #000; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.pick-panel[hidden]{ display: none; }
+.pick-tools{ display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hub .pick-link{ min-height: 40px; padding: 0; border: 0; background: none; color: #000; font-family: inherit; font-size: 0.9375rem; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.pick-count{ margin-left: auto; color: #6B6B6B; font-size: 0.875rem; }
+.pick-list{ max-height: 240px; overflow-y: auto; border: 1px solid #ddd; }
+.pick-row{ display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 12px; cursor: pointer; }
+.pick-row[hidden]{ display: none; }
+.pick-row + .pick-row{ border-top: 1px solid #eee; }
+.pick-row:hover{ background: #FFF7F5; }
+.hub .pick input[type="checkbox"]{ flex: none; width: 24px; height: 24px; min-height: 24px; padding: 0; margin: 0; accent-color: #000; }
+.pick-name{ display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.pick-email{ color: #6B6B6B; font-size: 0.875rem; font-weight: 400; }
+.pick-none{ color: #6B6B6B; font-size: 0.9375rem; }
+.pick-none[hidden]{ display: none; }
+.hub .pick-done{ min-height: 44px; border: 1px solid #000; background: #000; color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; }
+
+/* Search button on list pages */
+.hub .list-go{
+  min-height: 48px; padding: 0 22px; background: #000; color: #fff; border: 0;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.hub .list-go:hover{ background: #222; }
+.arch-tools{ margin-bottom: 20px; }
+
+.arch-more{ text-align: center; padding: 20px 16px 24px; border-top: 1px solid #E5E0DD; }
+.hub .arch-more p{ margin: 0 0 16px; font-size: 0.9375rem; color: #6B6B6B; }
+
+/* Pager layout. The Dashboard does not load tables.css, so it is repeated here:
+   centred, with a gap above (the other list pages already get this from tables.css). */
+.hub .tb-pager{
+  display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 24px; font-size: 0.9375rem; color: #6B6B6B;
+}
+
+/* Previous / Next buttons in the pager */
+.hub .tb-pg{
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; box-sizing: border-box;
+  border: 2px solid #000; background: #fff; color: #000; font-weight: 600; font-size: 0.9375rem; text-decoration: none; white-space: nowrap;
+}
+.hub a.tb-pg:hover{ background: #F1ECEA; }
+.hub .tb-pg.is-off{ border-color: #CFC8C4; color: #9A928D; }
+.hub .tb-pg-info{ flex: 1 1 100%; order: -1; text-align: center; }
+@media (min-width: 560px){ .hub .tb-pg-info{ flex: 0 1 auto; order: 0; padding: 0 8px; } }
+
+/* Search-as-you-type suggestions under a search box */
+.hub .sg-panel{
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 20; margin: 4px 0 0; padding: 0; list-style: none;
+  background: #fff; border: 2px solid #000; box-shadow: 0 8px 20px rgba(0,0,0,0.12); max-height: 60vh; overflow-y: auto;
+}
+.hub .sg-panel[hidden]{ display: none; }
+.hub .sg-panel li{ margin: 0; border-top: 1px solid #E5E0DD; }
+.hub .sg-panel li:first-child{ border-top: 0; }
+.hub .sg-row{
+  display: flex; flex-direction: column; gap: 2px; width: 100%; box-sizing: border-box; padding: 10px 14px; min-height: 44px;
+  background: #fff; color: #000; text-align: left; text-decoration: none; border: 0; font: inherit; cursor: pointer; justify-content: center;
+}
+.hub .sg-row:hover, .hub .sg-row.is-active{ background: #F1ECEA; }
+.hub .sg-title{ font-weight: 600; overflow-wrap: anywhere; }
+.hub .sg-sub{ font-size: 0.8125rem; color: #6B6B6B; overflow-wrap: anywhere; }
+.hub .sg-all{ font-weight: 600; text-align: center; align-items: center; }
+.hub .sg-none{ padding: 12px 14px; color: #6B6B6B; font-size: 0.9375rem; }
+
+/* ---------- task page: earlier attempts ---------- */
+.hub-earlier + .hub-earlier{ margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; }
+.hub .hub-earlier-head{ margin: 0 0 12px; font-weight: 600; }

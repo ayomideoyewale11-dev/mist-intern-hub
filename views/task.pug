@@ -1,0 +1,219 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  - const isAdmin = user.role === 'admin'
+  include partials/statusIcon
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      p.hub-back-top
+        if isAdmin
+          a(href=backTo.href)= `← Back to ${backTo.label}`
+        else if fromHistory
+          a(href='/my-history') ← Back to My History
+        else
+          a(href='/intern') ← Back to My Tasks
+
+      .hub-title
+        h1= task.title
+
+      .hub-state
+        +statusIcon(task.status, task.statusLabel)
+        span= `Due ${task.dueDateFormatted}`
+
+      //- ---------- sent back for a new version ----------
+      if task.resubmitReason
+        section.hub-card.hub-narrow
+          h2= isAdmin ? 'Waiting for a new version' : 'Your supervisor asked you to resubmit'
+          p.hub-feedback= task.resubmitReason
+
+      //- ---------- who / what ----------
+      if isAdmin && task.status !== 'submitted'
+        section.hub-card.hub-narrow
+          h2 Assigned to
+          dl.hub-details
+            .hub-row
+              dt Intern
+              dd
+                if task.assignedToId
+                  a.tb-link(href=`/interns/${task.assignedToId}`)= task.assignedToName
+                else
+                  = task.assignedToName
+            if task.assignedToEmail
+              .hub-row
+                dt Email
+                dd= task.assignedToEmail
+      else
+        section.hub-card.hub-narrow
+          h2 Task details
+          dl.hub-details
+            if isAdmin
+              .hub-row
+                dt Assigned to
+                dd
+                  if task.assignedToId
+                    a.tb-link(href=`/interns/${task.assignedToId}`)= task.assignedToName
+                  else
+                    = task.assignedToName
+            else if task.assignedByName
+              .hub-row
+                dt Assigned by
+                dd= task.assignedByName
+            .hub-row
+              dt Due date
+              dd= task.dueDateFormatted
+            .hub-row
+              dt Status
+              dd= task.statusLabel
+            .hub-row
+              dt Description
+              dd= task.description
+
+      //- ---------- the submission, once there is one ----------
+      if task.submission
+        section.hub-card.hub-narrow
+          h2 Submission
+          dl.hub-details
+            .hub-row
+              dt Result
+              dd
+                span.tb-pill.is-good Submitted
+            .hub-row
+              dt Submitted on
+              dd= task.submission.submittedAtFormatted
+            if task.submission.file
+              .hub-row
+                dt File
+                dd
+                  a.tb-link(href=`/api/tasks/${task._id}/submission/file`)= task.submission.file.originalName || 'submission'
+            if task.submission.link
+              .hub-row
+                dt Link
+                dd
+                  a.tb-link(href=task.submission.link, target='_blank', rel='noopener noreferrer')= task.submission.link
+            if task.submission.note
+              .hub-row
+                dt Note
+                dd= task.submission.note
+
+      //- ---------- earlier attempts (sent back for resubmission) ----------
+      if task.earlier.length
+        section.hub-card.hub-narrow
+          h2 Earlier attempts
+          each att in task.earlier
+            .hub-earlier
+              p.hub-earlier-head= `Submitted ${att.submittedAtFormatted}, sent back ${att.reopenedAtFormatted}`
+              dl.hub-details
+                .hub-row
+                  dt Why it was sent back
+                  dd= att.reason
+                if att.file
+                  .hub-row
+                    dt File
+                    dd
+                      a.tb-link(href=`/api/tasks/${task._id}/earlier/${att.index}/file`)= att.file.originalName
+                if att.link
+                  .hub-row
+                    dt Link
+                    dd
+                      a.tb-link(href=att.link, target='_blank', rel='noopener noreferrer')= att.link
+                if att.note
+                  .hub-row
+                    dt Note
+                    dd= att.note
+                if att.feedbackText
+                  .hub-row
+                    dt Feedback
+                    dd= att.feedbackText
+
+      //- ---------- feedback ----------
+      if isAdmin && task.status === 'submitted'
+        section.hub-card.hub-narrow
+          h2 Feedback
+          form#feedback-form(data-task-id=task._id)
+            .hub-field
+              label(for='feedbackText')= task.submission.feedback ? 'Update feedback' : 'Leave feedback'
+              textarea#feedbackText(name='text', maxlength='1000', placeholder='Write what went well and what to improve')= task.submission.feedback ? task.submission.feedback.text : ''
+            button.hub-submit(type='submit') Save feedback
+            p.form-status#feedback-status(role='status', aria-live='polite')
+      else if !isAdmin && task.submission && task.submission.feedback
+        section.hub-card.hub-narrow
+          h2 Feedback from your supervisor
+          p.hub-feedback= task.submission.feedback.text
+          p.hub-note-plain= `Given on ${task.submission.feedback.givenAtFormatted}`
+
+      //- ---------- supervisor: send a submitted task back for a new version ----------
+      if isAdmin && task.status === 'submitted'
+        section.hub-card.hub-narrow
+          h2 Ask for a resubmission
+          p.hub-note-plain The current submission is kept as an earlier attempt, and the task goes back to the intern's open tasks with the new due date.
+          form#reopen-form(data-task-id=task._id)
+            .hub-field
+              label(for='reopenReason') What needs to change?
+              textarea#reopenReason(name='reason', maxlength='1000', required)
+            .hub-field
+              label(for='reopenDate') New due date
+              input#reopenDate(type='date', name='dueDate', required)
+            button.hub-submit(type='submit') Send back to intern
+            p.form-status#reopen-status(role='status', aria-live='polite')
+
+      //- ---------- supervisor: change or remove a task that has not been handed in ----------
+      if isAdmin && task.status !== 'submitted'
+        section.hub-card.hub-narrow
+          h2 Edit task
+          form#edit-form(data-task-id=task._id)
+            .hub-field
+              label(for='editTitle') Title
+              input#editTitle(type='text', name='title', value=task.title, maxlength='200', required)
+            .hub-field
+              label(for='editDescription') Description
+              textarea#editDescription(name='description', maxlength='5000', required)= task.description
+            .hub-field
+              label(for='editDueDate')= task.status === 'overdue' ? 'New due date' : 'Due date'
+              input#editDueDate(type='date', name='dueDate', value=task.dueDateInput, required)
+            button.hub-submit(type='submit')= task.status === 'overdue' ? 'Give an extension' : 'Save changes'
+
+        if batch
+          section.hub-card.hub-narrow
+            h2 Extend for everyone
+            p.hub-note-plain= `This was assigned to ${batch.count} interns together. You can extend all of them at once instead of one by one.`
+            form#batch-form(data-batch-id=batch.id)
+              .hub-field
+                label(for='batchDueDate') New due date for everyone still open or overdue
+                input#batchDueDate(type='date', name='dueDate', required)
+              button.hub-submit(type='submit')= `Extend for all ${batch.count}`
+
+        if task.status === 'open' && !task.earlier.length
+          section.hub-card.hub-narrow
+            h2 Delete this task
+            p.hub-note-plain Only open tasks can be deleted. This cannot be undone.
+            button#delete-btn.hub-danger(type='button', data-task-id=task._id) Delete task
+
+      //- ---------- intern: hand the work in ----------
+      if !isAdmin && task.status === 'open'
+        section.hub-card.hub-narrow
+          h2 Submit work
+          form#submit-form(data-task-id=task._id)
+            .hub-field
+              label(for='submitFile') File: PDF, Word, Excel, PowerPoint, ZIP… (max 2 MB)
+              input#submitFile(type='file', name='file', accept='.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.zip')
+            .hub-field
+              label(for='submitLink') Link (GitHub repo, live site, etc.)
+              input#submitLink(type='url', name='link', placeholder='https://github.com/your-name/your-repo')
+            .hub-field
+              label(for='submitNote') Note for your supervisor (optional)
+              textarea#submitNote(name='note', maxlength='1000')
+            button.hub-submit(type='submit') Submit
+            p.form-status#form-status(role='status', aria-live='polite')
+
+block scripts
+  script(src='/js/common.js')
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/task.js')

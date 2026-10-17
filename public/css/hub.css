@@ -1,0 +1,15 @@
+/* The hub pages (every logged-in page). The rules are split into the files in public/css/hub/;
+   keep this order, because later files override earlier ones.
+     base.css — Variables, header, menu, page and card/form basics
+     responsive.css — Tablet, desktop and very small phone adjustments
+     forms.css — Register intern, Account and Edit intern
+     tasks.css — Archive, task page, intern history, My tasks
+     components.css — Messages, assign picker, search, pager, suggestions, earlier attempts
+     dashboard.css — Supervisor home: counts, progress rings, waiting card, My history ring
+*/
+@import url('/css/hub/base.css');
+@import url('/css/hub/responsive.css');
+@import url('/css/hub/forms.css');
+@import url('/css/hub/tasks.css');
+@import url('/css/hub/components.css');
+@import url('/css/hub/dashboard.css');

@@ -1,0 +1,72 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  include partials/listTools
+  include partials/statusIcon
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 Archive
+        p Every task you have assigned, grouped by intern.
+
+      .arch-chips
+        span.arch-chip.st-open
+          strong= stats.open
+          |  open
+        span.arch-chip.st-overdue
+          strong= stats.overdue
+          |  overdue
+        span.arch-chip.st-submitted
+          strong= stats.submitted
+          |  submitted
+
+      +searchBar('Search by intern or task title…', q, status, true, '', 'archive')
+        a.hub-outline-link(href='/archive/export.pdf') Download all as PDF
+
+      #archive-list
+        if groups.length === 0
+          p.tb-empty No tasks match.
+        each group in groups
+          details.arch-group(open=(groups.length <= 3 || Boolean(q)))
+            summary
+              span.arch-name= group.name
+              span.arch-count= `(${group.count})`
+            table.tb
+              thead
+                tr
+                  th(scope='col') Task
+                  th.arch-due(scope='col') Due date
+                  th.arch-st(scope='col') Status
+                  th.arch-fbcell(scope='col') Feedback
+              tbody
+                each task in group.tasks
+                  tr.archive-row
+                    td
+                      a.tb-link(href=`/tasks/${task._id}?back=${encodeURIComponent(here)}`)= task.title
+                      span.tb-sub.arch-due-inline= `Due ${task.dueDateFormatted}`
+                    td.arch-due.tb-nowrap= task.dueDateFormatted
+                    td.arch-st
+                      +statusIcon(task.status)
+                    td.arch-fbcell
+                      if task.status === 'submitted'
+                        span.arch-fb(class=(task.hasFeedback ? '' : 'is-todo'))= task.hasFeedback ? 'Feedback given' : 'Needs feedback'
+
+            if group.count > group.tasks.length
+              .arch-more
+                p= `Showing the latest ${group.tasks.length} of ${group.count} tasks.`
+                if group.known
+                  a.hub-outline-link(href=`/interns/${group.id}?back=${encodeURIComponent(here)}`) See all of their tasks
+
+      +pager(pg, 'interns')
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/listTools.js')

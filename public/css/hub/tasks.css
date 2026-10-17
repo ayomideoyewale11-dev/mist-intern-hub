@@ -1,0 +1,97 @@
+/* ---------- Archive and task page ---------- */
+.arch-chips{ display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.arch-chip{ border: 1px solid #000; background: #fff; padding: 6px 14px; font-size: 0.9375rem; font-weight: 600; white-space: nowrap; }
+.arch-chip strong{ font-size: 1.1875rem; }
+.arch-chip.st-open{ border: 2px solid #757575; color: #4D4D4D; }
+.arch-chip.st-submitted{ border: 2px solid #137333; color: #137333; }
+.arch-chip.st-overdue{ border: 2px solid #E01B1B; color: #E01B1B; }
+
+.arch-tools{ display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.arch-find{ display: flex; gap: 12px; align-items: stretch; min-width: 0; }
+.arch-search{ position: relative; flex: 1; min-width: 0; }
+.arch-search svg{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.hub .arch-search input{ padding-left: 42px; }
+.hub .arch-tools select{ width: 100%; }
+.hub a.hub-outline-link{
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px;
+  border: 2px solid #000; background: #fff; color: #000; font-weight: 600; font-size: 1rem;
+  text-decoration: none; white-space: nowrap; box-sizing: border-box;
+}
+.hub a.hub-outline-link:hover{ background: #F1ECEA; }
+
+.arch-group{ background: #fff; border: 1px solid #000; margin-bottom: 16px; overflow: hidden; }
+.arch-group[hidden]{ display: none; }
+.arch-group summary{
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; cursor: pointer;
+  padding: 12px; list-style: none; border-bottom: 1px solid #000;
+}
+.arch-group summary::-webkit-details-marker{ display: none; }
+.arch-group summary::before{
+  content: ""; flex: none; width: 18px; height: 18px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") center / contain no-repeat;
+  transition: transform 0.15s;
+}
+.arch-group:not([open]) summary{ border-bottom: 0; }
+.arch-group:not([open]) summary::before{ transform: rotate(-90deg); }
+.arch-name{ font-size: 1.0625rem; font-weight: 700; }
+.arch-count{ color: #6B6B6B; font-size: 0.9375rem; }
+.arch-group .tb{ border: 0; }
+.archive-row[hidden]{ display: none; }
+th.arch-due, td.arch-due{ display: none; }
+.arch-due-inline{ display: block; }
+
+.hub-state{ display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: center; margin: -12px 0 24px; }
+.hub .hub-feedback{ margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.hub-danger{
+  display: block; width: 100%; min-height: 52px; background: #fff; color: #A8391E; cursor: pointer;
+  border: 2px solid #A8391E; font-family: inherit; font-size: 1.0625rem; font-weight: 600;
+}
+.hub-danger:hover{ background: #FBEDE9; }
+/* a danger button directly under a form field (Terminate internship): keep a gap, and stay centred on wider screens */
+.hub-field + .hub-danger{ margin: 24px auto 0; }
+.hub input[type="file"]{ padding: 10px 14px; height: auto; }
+.hub-card form > .hub-field + .hub-field{ margin-top: 20px; }
+
+@media (min-width: 768px){
+  .arch-tools{ flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 16px; }
+  .arch-find{ flex: 1 1 100%; }
+  .hub .arch-tools select{ width: 220px; }
+  .arch-tools .hub-outline-link{ margin-left: auto; }
+  .arch-group summary{ padding: 14px 16px; }
+  .arch-name{ font-size: 1.125rem; }
+  th.arch-due, td.arch-due{ display: table-cell; width: 160px; }
+  .arch-due-inline{ display: none; }
+  .hub-danger{ max-width: 320px; margin: 0 auto; }
+}
+@media (min-width: 1100px){
+  .arch-find{ flex: 1 1 0; }
+}
+
+/* Intern history, error page */
+.hub a.hub-pdf{ display: flex; margin: 24px auto 0; width: 100%; max-width: 240px; }
+.hub a.hub-pdf-top{ margin: -12px auto 24px; }
+.hub .err-actions{ text-align: center; margin-top: 8px; }
+
+/* back link above the title, left aligned */
+.hub-back-top{ text-align: left; margin: 0 0 12px; }
+.hub .hub-back-top a{
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; box-sizing: border-box;
+  border: 2px solid #000; background: #fff; color: #000; font-weight: 600; text-decoration: none;
+}
+.hub .hub-back-top a:hover{ background: #F1ECEA; }
+
+/* ---------- My tasks (intern) ---------- */
+.hub .hub-empty{ text-align: center; color: #6B6B6B; font-size: 1.0625rem; padding: 40px 0; }
+.mt-list{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.mt-card{ background: #fff; border: 1px solid #000; padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.hub .mt-title{ font-size: 1.25rem; font-weight: 700; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
+.hub .mt-title a{ color: #000; text-decoration: none; }
+.hub .mt-title a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+.hub .mt-desc{ color: #3a3a3a; line-height: 1.5; margin: 0; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.mt-foot{ margin-top: auto; padding-top: 12px; border-top: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mt-due{ font-weight: 600; font-variant-numeric: tabular-nums; }
+.mt-due-label{ color: #6B6B6B; font-weight: 500; }
+.hub a.hub-outline-link.mt-open{ min-height: 44px; padding: 0 20px; }
+@media (min-width: 768px){ .mt-list{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } .mt-card{ padding: 24px; } }
+@media (min-width: 1100px){ .mt-list{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }

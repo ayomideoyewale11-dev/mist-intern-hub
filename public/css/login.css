@@ -1,0 +1,132 @@
+/* Login page. Mobile-first: base styles are for phones (320px and up),
+   then it widens at 768px (tablet) and 1100px (desktop). Everything is
+   scoped under .login so it can't affect the other pages. Font is
+   IBM Plex Sans, loaded by layout.pug. */
+
+.login{
+  --lg-bg: #FFF7F5;
+  --lg-ink: #000;
+  --lg-muted: #6B6B6B;
+  --lg-error: #A8391E;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  padding: 20px 14px 32px;
+  background: var(--lg-bg); color: var(--lg-ink);
+  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+  font-size: 0.9375rem; line-height: 1.5;
+}
+.login h1, .login p{ margin: 0; }
+.login input:focus, .login button:focus{ outline: none; box-shadow: none; }
+.login a:focus-visible, .login button:focus-visible{ outline: 2px solid #000; outline-offset: 3px; }
+.login .lg-eye:focus, .login .lg-eye:focus-visible{ outline: none; }
+
+/* ---------- back link ---------- */
+.lg-back{
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 12px;
+  min-height: 44px; padding: 0 18px 0 14px; box-sizing: border-box;
+  border: 2px solid var(--lg-ink); background: #fff;
+  color: var(--lg-ink); font-size: 1.0625rem; font-weight: 600; text-decoration: none;
+}
+.lg-back:hover{ background: #F1ECEA; }
+.lg-back span{ text-decoration: none; }
+
+/* ---------- card ---------- */
+.lg-main{
+  flex: 1; display: flex; justify-content: center; align-items: flex-start;
+  padding-top: 28px;
+}
+.lg-card{
+  width: 100%; max-width: 460px;
+  background: #fff; border: 1px solid var(--lg-ink);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.lg-head{ display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.lg-head h1{
+  font-family: inherit; font-weight: 700; font-size: 1.625rem; line-height: 1.15;
+  letter-spacing: 0.01em; text-transform: uppercase;
+}
+.lg-head p{ color: var(--lg-muted); font-size: 0.9rem; font-weight: 500; }
+
+/* ---------- form ---------- */
+.login form{ display: flex; flex-direction: column; gap: 20px; }
+.lg-field{ display: flex; flex-direction: column; gap: 8px; }
+.login label{ margin: 0; font-size: 0.9375rem; font-weight: 400; }
+.login input{
+  width: 100%; min-height: 44px; padding: 0 14px;
+  background: #fff; color: var(--lg-ink);
+  border: 1.5px solid var(--lg-ink); border-radius: 0;
+  font-family: inherit; font-size: 1rem;
+}
+.login input::placeholder{ color: var(--lg-muted); opacity: 1; }
+
+/* password box with a show/hide eye */
+.lg-pw{ position: relative; }
+.lg-pw input{ padding-right: 48px; box-sizing: border-box; }
+.lg-eye{
+  position: absolute; top: 0; right: 0; width: 46px; height: 100%;
+  background: none; border: 0; color: #6B6B6B; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.lg-eye[aria-pressed="true"]{ color: #137333; }
+
+.lg-submit{
+  width: 100%; min-height: 52px; margin-top: 4px;
+  background: #000; color: #fff; border: 0; border-radius: 0;
+  font-family: inherit; font-size: 1.1875rem; font-weight: 400; cursor: pointer;
+}
+.lg-submit:hover{ background: #222; }
+
+/* "Logging in…" / error message from authClient.js */
+.login .form-status{
+  margin: 0; min-height: 1.4em; text-align: center; font-size: 0.9rem; color: var(--lg-muted);
+}
+.login .form-status[data-state="error"]{ color: var(--lg-error); font-weight: 500; }
+.login .form-status[data-state="ok"]{ color: #137333; font-weight: 500; }
+
+.lg-forgot{
+  align-self: center;
+  display: flex; align-items: center; min-height: 44px;
+  color: #444; font-size: 1.1875rem; text-decoration: underline;
+}
+.lg-forgot:hover{ color: #000; }
+
+.lg-note{
+  border-top: 1px solid var(--lg-ink); padding-top: 22px;
+  text-align: center; font-size: 0.9rem; font-weight: 500;
+}
+
+/* ---------- very small phones ---------- */
+@media (max-width: 359px){
+  .login{ padding-left: 12px; padding-right: 12px; }
+  .lg-card{ padding: 20px; }
+  .lg-head h1{ font-size: 1.5rem; }
+  .lg-submit, .lg-forgot{ font-size: 1.0625rem; }
+}
+
+/* ---------- regular phones (393px design) ---------- */
+@media (min-width: 380px){
+  .login{ padding-left: 16px; padding-right: 16px; }
+  .lg-card{ padding: 32px; }
+}
+
+/* ---------- tablet ---------- */
+@media (min-width: 768px){
+  .login{ padding: 32px 40px 48px; font-size: 1rem; }
+  .lg-back{ font-size: 1.1875rem; }
+  .lg-main{ align-items: center; padding-top: 24px; }
+  .lg-card{ max-width: 520px; padding: 40px; gap: 28px; }
+  .lg-head h1{ font-size: 2rem; }
+  .lg-head p{ font-size: 1rem; }
+  .login input{ min-height: 48px; }
+  .login label{ font-size: 1rem; }
+}
+
+/* ---------- desktop ---------- */
+@media (min-width: 1100px){
+  .login{ padding-left: 64px; padding-right: 64px; }
+  .lg-card{ padding: 48px; }
+  .lg-head h1{ font-size: 2.125rem; }
+}

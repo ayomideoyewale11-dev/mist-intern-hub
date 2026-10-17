@@ -1,0 +1,87 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  include partials/listTools
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 Interns
+        p Your current interns. Open an intern to see their task history, or edit their details.
+
+      if everything === 0
+        //- No interns at all yet: a plain call to action instead of an empty list
+        .tb-start
+          p.tb-start-text You have no interns yet. Use the button below to add one.
+          a.tb-start-btn(href='/interns/new') Register Intern
+      else
+        .tb-bar
+          p.tb-count= `${total} ${total === 1 ? 'intern' : 'interns'}${q ? ' found' : ''}`
+          a.tb-btn(href='/interns/new') Register intern
+
+        if everything > 5 || q
+          +searchBar('Search by name or email…', q, '', false, '', 'interns')
+
+        if interns.length === 0
+          p.tb-empty= q ? 'No intern matches your search.' : 'You have no interns yet. Use "Register intern" to add one.'
+        else
+          //- Wide table: tablet and up
+          .tb-card.tb-wide
+            table.tb
+              thead
+                tr
+                  th(scope='col') Name
+                  th(scope='col') Email
+                  th(scope='col') Start date
+                  th(scope='col') End date
+                  th(scope='col')
+                    span.tb-sr Actions
+              tbody
+                each i in interns
+                  tr
+                    td.tb-strong= i.name
+                    td.tb-break= i.email
+                    td= i.startFormatted
+                    td= i.endFormatted
+                    td.tb-act
+                      a.tb-link(href=`/interns/${i._id}?back=${encodeURIComponent(here)}`)
+                        | History
+                        span.tb-sr= ` of ${i.name}`
+                      span.tb-sep  |
+                      a.tb-link(href=`/interns/${i._id}/edit?back=${encodeURIComponent(here)}`)
+                        | Edit
+                        span.tb-sr= ` ${i.name}`
+
+          //- Narrow table: phones
+          .tb-card.tb-narrow
+            table.tb
+              thead
+                tr
+                  th(scope='col') Intern
+                  th(scope='col') Internship
+              tbody
+                each i in interns
+                  tr
+                    td
+                      span.tb-strong= i.name
+                      span.tb-sub.tb-break= i.email
+                      span.tb-line
+                        a.tb-link(href=`/interns/${i._id}?back=${encodeURIComponent(here)}`) History
+                        span.tb-sep  |
+                        a.tb-link(href=`/interns/${i._id}/edit?back=${encodeURIComponent(here)}`) Edit
+                    td
+                      span= i.startFormatted
+                      span.tb-sub= `to ${i.endFormatted}`
+
+        +pager(pg)
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/listTools.js')

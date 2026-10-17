@@ -1,0 +1,70 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  include partials/listTools
+  include partials/statusIcon
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      p.hub-back-top
+        a(href=backTo.href)= `← Back to ${backTo.label}`
+      .hub-title
+        h1= intern.name
+        p Task history
+
+      section.hub-card.hub-narrow
+        h2 Intern details
+        dl.hub-details
+          .hub-row
+            dt Email
+            dd= intern.email
+          if intern.startFormatted
+            .hub-row
+              dt Internship
+              dd= `${intern.startFormatted} → ${intern.endFormatted}`
+          .hub-row
+            dt Status
+            dd
+              span.tb-pill(class=(intern.active ? 'is-good' : 'is-bad'))= intern.active ? 'Active' : (intern.terminated ? 'Terminated' : 'Internship ended')
+          if intern.terminated
+            .hub-row
+              dt Terminated
+              dd= `${intern.terminatedFormatted}. Reason: ${intern.terminationReason}`
+        a.hub-outline-link.hub-pdf(href=`/interns/${intern._id}/export.pdf`) Download as PDF
+
+      if everything > 5 || q || status
+        +searchBar('Search by task title…', q, status, true, back, 'history', String(intern._id))
+
+      if tasks.length === 0
+        p.tb-empty= (q || status) ? 'No tasks match.' : 'No tasks have been assigned to this intern yet.'
+      else
+        p.tb-count= `${pg.total} ${pg.total === 1 ? 'task' : 'tasks'}${(q || status) ? ' found' : ''}`
+        .tb-card
+          table.tb
+            thead
+              tr
+                th(scope='col') Task
+                th.arch-due(scope='col') Due date
+                th(scope='col') Status
+            tbody
+              each task in tasks
+                tr
+                  td
+                    a.tb-link(href=`/tasks/${task._id}?back=${encodeURIComponent(here)}`)= task.title
+                    span.tb-sub.arch-due-inline= `Due ${task.dueDateFormatted}`
+                  td.arch-due.tb-nowrap= task.dueDateFormatted
+                  td
+                    +statusIcon(task.status)
+
+      +pager(pg)
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/listTools.js')

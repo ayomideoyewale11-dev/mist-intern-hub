@@ -1,0 +1,100 @@
+extends layout
+
+//- Subject of an entry: the task or intern it was about, as a link when we can.
+mixin subject(entry)
+  if entry.taskId
+    a.tb-link(href=`/tasks/${entry.taskId}?back=${encodeURIComponent(here)}`)= entry.taskTitle || 'Unknown'
+  else if entry.internId
+    a.tb-link(href=`/interns/${entry.internId}?back=${encodeURIComponent(here)}`)= entry.internName || 'Unknown'
+  else
+    span= entry.taskTitle || entry.internName || 'Unknown'
+
+//- Action pill. Red for removals, green for good outcomes, black otherwise.
+mixin pill(entry)
+  - const label = entry.action.replace(/-/g, ' ')
+  - const tone = /deleted|deactivated|terminated/.test(entry.action) ? 'is-bad' : /submitted|feedback/.test(entry.action) ? 'is-good' : ''
+  span.tb-pill(class=tone)= label.charAt(0).toUpperCase() + label.slice(1)
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 Audit log
+        p A plain record of what has happened with your interns: who did it and when.
+
+      if entries.length === 0
+        p.tb-empty Nothing has happened yet.
+      else
+        p.tb-count= `Showing ${entries.length} of ${total} ${total === 1 ? 'entry' : 'entries'}`
+
+        //- Tablet and desktop. Details become their own column from 1100px;
+        //- below that they sit under the subject.
+        .tb-card.tb-wide
+          table.tb.tb-audit
+            thead
+              tr
+                th(scope='col')
+                  span.tb-when-long Date and time
+                  span.tb-when-short When
+                th(scope='col')
+                  span.tb-subj-long Subject
+                  span.tb-subj-short Subject and details
+                th(scope='col') Action
+                th.tb-col-details(scope='col') Details
+                th(scope='col')
+                  span.tb-by-long Done by
+                  span.tb-by-short By
+            tbody
+              each entry in entries
+                tr
+                  td.tb-nowrap= entry.whenFormatted
+                  td
+                    +subject(entry)
+                    if entry.details
+                      span.tb-sub.tb-inline-details= entry.details
+                  td
+                    +pill(entry)
+                  td.tb-col-details= entry.details || '—'
+                  td= entry.performedByName
+
+        //- Phones
+        .tb-card.tb-narrow
+          table.tb
+            thead
+              tr
+                th(scope='col') When
+                th(scope='col') What happened
+            tbody
+              each entry in entries
+                tr
+                  td.tb-nowrap= entry.whenFormatted
+                  td
+                    +subject(entry)
+                    span.tb-line
+                      +pill(entry)
+                    if entry.details
+                      span.tb-sub= entry.details
+                    span.tb-sub= `by ${entry.performedByName}`
+
+        if totalPages > 1
+          nav.tb-pager(aria-label='Pages')
+            if page > 1
+              a.tb-pg(href=`/audit-log?page=${page - 1}`) ← Newer
+            else
+              span.tb-pg.is-off ← Newer
+            span.tb-pg-info= `Page ${page} of ${totalPages}`
+            if page < totalPages
+              a.tb-pg(href=`/audit-log?page=${page + 1}`) Older →
+            else
+              span.tb-pg.is-off Older →
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')

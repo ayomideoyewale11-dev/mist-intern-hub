@@ -1,0 +1,85 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  include partials/listTools
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 Alumni
+        p Interns whose internship has ended. Their accounts and task history are kept exactly as they were.
+
+      if everything > 5 || q
+        +searchBar('Search by name or email…', q, '', false, '', 'alumni')
+
+      if alumni.length === 0
+        p.tb-empty= q ? 'No alumni match your search.' : 'No one has finished their internship yet.'
+      else
+        p.tb-count= `${total} ${total === 1 ? 'alumnus' : 'alumni'}${q ? ' found' : ''}`
+
+        //- Wide table: tablet and up
+        .tb-card.tb-wide
+          table.tb
+            thead
+              tr
+                th(scope='col') Name
+                th(scope='col') Email
+                th(scope='col') Start date
+                th(scope='col') End date
+                th(scope='col')
+                  span.tb-sr Actions
+            tbody
+              each a in alumni
+                tr
+                  td.tb-strong
+                    = a.name
+                    if a.terminated
+                      |  
+                      span.tb-pill.is-bad Terminated
+                  td.tb-break= a.email
+                  td= a.startFormatted
+                  td= a.endFormatted
+                  td.tb-act
+                    a.tb-link(href=`/interns/${a._id}?back=${encodeURIComponent(here)}`)
+                      | View
+                      span.tb-sr= ` ${a.name}`
+                    span.tb-sep  · 
+                    a.tb-link(href=`/interns/${a._id}/edit?back=${encodeURIComponent(here)}`)
+                      | Edit
+                      span.tb-sr= ` ${a.name}`
+
+        //- Narrow table: phones
+        .tb-card.tb-narrow
+          table.tb
+            thead
+              tr
+                th(scope='col') Intern
+                th(scope='col') Internship
+                th(scope='col')
+                  span.tb-sr View
+            tbody
+              each a in alumni
+                tr
+                  td
+                    a.tb-rowlink.tb-strong(href=`/interns/${a._id}?back=${encodeURIComponent(here)}`)= a.name
+                    if a.terminated
+                      span.tb-pill.is-bad Terminated
+                    span.tb-sub.tb-break= a.email
+                  td
+                    span= a.startFormatted
+                    span.tb-sub= `to ${a.endFormatted}`
+                    a.tb-link(href=`/interns/${a._id}/edit?back=${encodeURIComponent(here)}`) Edit
+                  td.tb-chev(aria-hidden='true') ›
+
+      +pager(pg)
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/listTools.js')

@@ -1,0 +1,34 @@
+//- Search box (and optional status filter) for list pages. A plain GET form,
+//- so it works without any script; listTools.js submits when the filter changes.
+mixin searchBar(placeholder, q, status, withStatus, back, suggest, internId)
+  form.arch-tools(method='get')
+    if back
+      input(type='hidden', name='back', value=back)
+    .arch-find
+      .arch-search
+        svg(width='18', height='18', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', aria-hidden='true')
+          circle(cx='11', cy='11', r='7')
+          path(d='M20 20l-4-4')
+        input(type='search', name='q', value=q, placeholder=placeholder, aria-label=placeholder, maxlength='100', data-suggest=suggest, data-intern=internId)
+      button.list-go(type='submit') Search
+    if withStatus
+      select.auto-submit(name='status', aria-label='Filter by status')
+        option(value='') All statuses
+        option(value='open', selected=status === 'open') Open
+        option(value='overdue', selected=status === 'overdue') Overdue
+        option(value='submitted', selected=status === 'submitted') Submitted
+    if block
+      block
+
+mixin pager(pg, noun)
+  if pg.totalPages > 1
+    nav.tb-pager(aria-label='Pages')
+      if pg.prev
+        a.tb-pg(href=pg.prev) ← Previous
+      else
+        span.tb-pg.is-off ← Previous
+      span.tb-pg-info= `Page ${pg.page} of ${pg.totalPages} (${pg.total} ${noun || 'total'})`
+      if pg.next
+        a.tb-pg(href=pg.next) Next →
+      else
+        span.tb-pg.is-off Next →

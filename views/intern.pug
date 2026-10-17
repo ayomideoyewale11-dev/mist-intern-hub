@@ -1,0 +1,36 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 My tasks
+        p Open tasks from your supervisor. You can submit each one once, as a file, a link, or both.
+
+      if tasks.length === 0
+        p.hub-empty No open tasks right now.
+      else
+        ul.mt-list
+          each task in tasks
+            li.mt-card
+              h2.mt-title
+                a(href=`/tasks/${task._id}`)= task.title
+              p.mt-desc= task.description
+              .mt-foot
+                span.mt-due
+                  span.mt-due-label Due
+                  = ` ${task.dueDateFormatted}`
+                a.hub-outline-link.mt-open(href=`/tasks/${task._id}`)
+                  | Open
+                  span.tb-sr= ` ${task.title}`
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')

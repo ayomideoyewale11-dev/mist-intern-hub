@@ -1,0 +1,65 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+
+block content
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 Account
+
+      section.hub-card.hub-narrow
+        h2 Your details
+        dl.hub-details
+          .hub-row
+            dt Name
+            dd= me.name
+          .hub-row
+            dt Email
+            dd= me.email
+          .hub-row
+            dt Role
+            dd= me.role === 'admin' ? 'Supervisor' : 'Intern'
+          if me.supervisorName
+            .hub-row
+              dt Supervisor
+              dd= me.supervisorName
+          if me.startFormatted
+            .hub-row
+              dt Internship
+              dd= `${me.startFormatted} → ${me.endFormatted}`
+
+      section.hub-card.hub-narrow
+        h2 Change password
+        form#change-password-form
+          .hub-two
+            .hub-field
+              label(for='currentPassword') Current password
+              .hub-pw
+                input#currentPassword(type='password', required, autocomplete='current-password', placeholder='Enter current password')
+                button.hub-eye(type='button', aria-label='Show password', aria-pressed='false')
+                  svg(width='20', height='20', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+                    path(d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z')
+                    circle(cx='12', cy='12', r='3')
+            .hub-field
+              label(for='newPassword') New password
+              .hub-pw
+                input#newPassword(type='password', minlength='8', required, autocomplete='new-password', placeholder='At least 8 characters')
+                button.hub-eye(type='button', aria-label='Show password', aria-pressed='false')
+                  svg(width='20', height='20', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+                    path(d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z')
+                    circle(cx='12', cy='12', r='3')
+
+          button.hub-submit(type='submit') Save new password
+          p.form-status#form-status(role='status', aria-live='polite')
+
+block scripts
+  script(src='/js/common.js')
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/pwToggle.js')
+  script(src='/js/account.js')

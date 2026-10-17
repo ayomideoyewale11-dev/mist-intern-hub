@@ -1,0 +1,70 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+
+block content
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      p.hub-back-top
+        a(href=backTo.href)= `← Back to ${backTo.label}`
+
+      .hub-title
+        h1 Edit intern
+        p= intern.name
+
+      section.hub-card.hub-narrow
+        h2 Intern details
+        form#edit-intern-form(data-intern-id=intern._id, data-terminated=String(intern.terminated))
+          .hub-two
+            .hub-field
+              label(for='editInternName') Full name
+              input#editInternName(type='text', value=intern.name, required)
+            .hub-field
+              label(for='editInternEmail') Email
+              input#editInternEmail(type='email', value=intern.email, required)
+            .hub-field
+              label(for='editInternStart') Internship start date
+              input#editInternStart(type='date', value=intern.startDateInput, required)
+            .hub-field
+              label(for='editInternEnd') Internship end date
+              input#editInternEnd(type='date', value=intern.endDateInput, required)
+
+          label.hub-check(for='editInternActive')
+            input#editInternActive(type='checkbox', checked=intern.active)
+            span Active (can be assigned tasks and can log in)
+
+          button.hub-submit(type='submit') Save changes
+          p.form-status#edit-intern-status(role='status', aria-live='polite')
+
+      if intern.terminated
+        section.hub-card.hub-narrow
+          h2 Internship terminated
+          p.hub-note-plain= `This internship was terminated on ${intern.terminatedFormatted}. Reason: ${intern.terminationReason}`
+          p.hub-note-plain To restore this intern, tick "Active" above and save. They will be able to log in again, and the termination is removed.
+      else if intern.active
+        section.hub-card.hub-narrow
+          h2 Terminate internship
+          p.hub-note-plain Use this only for a serious reason, such as misconduct. The intern is emailed the reason you write below, logged out straight away and cannot log in again. Their tasks disappear from your Dashboard and Archive but are not deleted. You can undo it later by ticking "Active" and saving, and everything comes back.
+          form#terminate-form(data-intern-id=intern._id, data-intern-name=intern.name)
+            .hub-field
+              label(for='terminateReason') Reason (required; the intern will read it in their email, and it is kept in the audit log)
+              textarea#terminateReason(maxlength='500', required, placeholder='e.g. Repeated absence without notice')
+            button#terminate-btn.hub-danger(type='submit') Terminate internship
+            p.form-status#terminate-status(role='status', aria-live='polite')
+
+      if intern.active
+        section.hub-card.hub-narrow
+          h2 Welcome email
+          p.hub-note-plain If the intern didn't get their email, or the address was wrong, send it again.
+          button#resend-welcome-btn.hub-outline(type='button', data-intern-id=intern._id) Resend welcome email
+          p.form-status#resend-status(role='status', aria-live='polite')
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/common.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/editIntern.js')

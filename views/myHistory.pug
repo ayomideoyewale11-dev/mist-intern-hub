@@ -1,0 +1,59 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+  link(rel='stylesheet', href='/css/tables.css')
+
+block content
+  include partials/listTools
+  include partials/statusIcon
+  include partials/progressRing
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      .hub-title
+        h1 My history
+        p Every task you have been given. Open a submitted task to see your supervisor's feedback.
+
+      if everything > 0
+        section.hub-card.hub-me-card
+          +progressRing(ring, 'Your progress')
+          .hub-me-info
+            h2= `${ring.done} of ${ring.total} ${ring.total === 1 ? 'task' : 'tasks'} submitted`
+            p= `${ring.open} open · ${ring.overdue} overdue`
+
+      if everything > 0
+        a.hub-outline-link.hub-pdf.hub-pdf-top(href='/my-history/export.pdf') Download my record
+
+      if everything > 5 || q || status
+        +searchBar('Search by task title…', q, status, true, '', 'history')
+
+      if tasks.length === 0
+        p.tb-empty= (q || status) ? 'No tasks match.' : 'No task has been assigned to you yet.'
+      else
+        p.tb-count= `${pg.total} ${pg.total === 1 ? 'task' : 'tasks'}${(q || status) ? ' found' : ''}`
+        .tb-card
+          table.tb
+            thead
+              tr
+                th(scope='col') Task
+                th.arch-due(scope='col') Due date
+                th(scope='col') Status
+            tbody
+              each task in tasks
+                tr
+                  td
+                    a.tb-link(href=`/tasks/${task._id}?from=history`)= task.title
+                    span.tb-sub.arch-due-inline= `Due ${task.dueDateFormatted}`
+                  td.arch-due.tb-nowrap= task.dueDateFormatted
+                  td
+                    +statusIcon(task.status)
+
+      +pager(pg)
+
+block scripts
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/listTools.js')

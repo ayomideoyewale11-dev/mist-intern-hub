@@ -1,0 +1,165 @@
+/* Welcome page. Mobile-first: base styles are for phones (320px and up),
+   then it widens at 640px (two cards), 768px (tablet: three columns) and
+   1100px (desktop). Everything is scoped under .welcome so it can't
+   affect the rest of the app. */
+html{ scroll-behavior: smooth; }
+
+.welcome{
+  --wl-bg: #FFF7F5;
+  --wl-ink: #111;
+  --wl-muted: #6B6B6B;
+  --wl-open: #137333;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--wl-bg); color: var(--wl-ink);
+  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+  font-size: 1rem; line-height: 1.5;
+}
+.welcome main{ flex: 1; }
+.welcome h1, .welcome h2, .welcome h3{
+  font-family: inherit; font-weight: 700; margin: 0; line-height: 1.2;
+}
+.welcome p{ margin: 0; }
+.welcome section{ padding: 0; }
+.welcome a:focus-visible{ outline: 3px solid var(--wl-open); outline-offset: 3px; }
+.wl-muted{ color: var(--wl-muted); }
+
+.wl-container{
+  width: 100%; max-width: 1120px; margin: 0 auto;
+  padding-left: 14px; padding-right: 14px;
+}
+
+/* ---------- header ---------- */
+.wl-header{ background: #000; color: #fff; }
+.wl-header-bar{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding-top: 12px; padding-bottom: 12px;
+}
+.wl-brand{ display: flex; align-items: center; gap: 12px; min-width: 0; }
+.wl-crest{ flex: none; width: 36px; height: 36px; object-fit: contain; }
+.wl-ministry{ font-size: 0.7rem; font-weight: 500; line-height: 1.35; max-width: 22ch; }
+.wl-login{
+  flex: none; display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 14px; border: 1.5px solid #fff; color: #fff;
+  font-size: 0.8rem; font-weight: 500; text-decoration: none;
+}
+.wl-login:hover{ background: #fff; color: #000; }
+
+/* ---------- hero ---------- */
+.wl-hero .wl-container{
+  display: flex; flex-direction: column; align-items: center;
+  gap: 28px; padding-top: 32px; padding-bottom: 32px; text-align: center;
+}
+.wl-hero h1{
+  font-size: clamp(1.75rem, 1.1rem + 3vw, 3.5rem);
+}
+.wl-lead{ margin-top: 16px; max-width: 46rem; font-size: 0.95rem; }
+
+.wl-tasks{
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px;
+  width: 100%; max-width: 920px; text-align: left;
+}
+.wl-card{
+  background: #fff; border: 1.5px solid var(--wl-ink); padding: 18px;
+  display: flex; flex-direction: column; gap: 12px; min-width: 0;
+}
+.wl-card-top{ display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.wl-card-label{ font-size: 0.8rem; font-weight: 500; max-width: 11ch; }
+.wl-card h2{ font-size: 1.3rem; }
+.wl-card-foot{
+  margin-top: 6px; padding-top: 14px; border-top: 1.5px solid var(--wl-ink);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  font-size: 0.85rem;
+}
+.wl-fake-btn{
+  background: #DDD; padding: 0 16px; min-height: 44px;
+  display: inline-flex; align-items: center; font-weight: 500;
+}
+
+/* ---------- how it works ---------- */
+.wl-how .wl-container{
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 24px; padding-top: 8px; padding-bottom: 40px;
+}
+.wl-how h2{ font-size: 1.6rem; }
+.wl-how-sub{ margin-top: 6px; }
+.wl-steps{ display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; width: 100%; }
+.wl-step{
+  background: #fff; border: 1.5px solid var(--wl-ink); padding: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 0;
+}
+.wl-step svg{ width: 48px; height: 48px; color: var(--wl-ink); }
+.wl-step h3{ font-size: 1.15rem; font-weight: 600; }
+.wl-step p{ font-size: 0.95rem; }
+
+/* ---------- footer ---------- */
+.wl-footer{ background: #000; color: #A3A3A3; }
+.wl-footer .wl-container{
+  display: flex; flex-direction: column; gap: 28px;
+  padding-top: 36px; padding-bottom: 24px;
+}
+.wl-footer-grid{ display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.wl-footer-grid > div{ display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.wl-footer h2{ font-size: 1.1rem; color: #fff; }
+.wl-footer p, .wl-footer a{ font-size: 0.95rem; }
+.wl-footer a{
+  color: #C9C9C9; text-decoration: underline;
+  min-height: 44px; display: flex; align-items: center;
+}
+.wl-footer a:hover{ color: #fff; }
+.wl-footer-bottom{
+  border-top: 1px solid #333; padding-top: 20px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+  color: #fff; font-size: 0.95rem; font-weight: 500;
+}
+.wl-crest-lg{ width: 64px; height: 64px; }
+
+/* ---------- 360px and smaller phones ---------- */
+@media (max-width: 359px){
+  .wl-ministry{ font-size: 0.65rem; }
+  .wl-login{ padding: 0 10px; }
+}
+
+/* ---------- large phones / small tablets: two task cards ---------- */
+@media (min-width: 640px){
+  .wl-tasks{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+}
+
+/* ---------- tablet ---------- */
+@media (min-width: 768px){
+  .wl-container{ padding-left: 40px; padding-right: 40px; }
+  .wl-crest{ width: 44px; height: 44px; }
+  .wl-ministry{ font-size: 0.8rem; max-width: none; }
+  .wl-login{ padding: 0 20px; font-size: 0.9rem; }
+
+  .wl-hero .wl-container{ gap: 40px; padding-top: 64px; padding-bottom: 64px; }
+  .wl-lead{ font-size: 1.05rem; }
+  .wl-card{ padding: 24px; }
+  .wl-card-label{ font-size: 0.85rem; }
+  .wl-card h2{ font-size: 1.5rem; }
+
+  .wl-how .wl-container{ gap: 32px; padding-top: 16px; padding-bottom: 72px; }
+  .wl-how h2{ font-size: 1.9rem; }
+  .wl-steps{ grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .wl-step{ padding: 32px 20px; }
+  .wl-step svg{ width: 56px; height: 56px; }
+
+  .wl-footer .wl-container{ gap: 36px; padding-top: 48px; padding-bottom: 28px; }
+  .wl-footer-grid{ grid-template-columns: 1.4fr 1fr 1.2fr; gap: 40px; }
+  .wl-footer-bottom{ flex-direction: row; align-items: center; }
+  .wl-crest-lg{ width: 56px; height: 56px; }
+}
+
+/* ---------- desktop ---------- */
+@media (min-width: 1100px){
+  .wl-container{ padding-left: 64px; padding-right: 64px; }
+  .wl-hero .wl-container{ padding-top: 80px; padding-bottom: 80px; }
+  .wl-how h2{ font-size: 2.25rem; }
+  .wl-step{ padding: 36px 28px; }
+  .wl-steps{ gap: 24px; }
+}
+
+/* respect people who turn off animations */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+}

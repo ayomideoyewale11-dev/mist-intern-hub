@@ -1,0 +1,44 @@
+extends layout
+
+block head
+  link(rel='stylesheet', href='/css/hub.css')
+
+block content
+  .hub
+    include partials/hubHeader
+
+    main.hub-main
+      p.hub-back-top
+        a(href='/interns') ← Back to Interns
+
+      .hub-title
+        h1 Register a new intern
+
+      section.hub-card.hub-narrow
+        h2 Intern details
+        form#new-intern-form
+          .hub-two
+            .hub-field
+              label(for='internName') Full name
+              input#internName(type='text', required, autocomplete='off', placeholder='e.g. Chinedu Okafor')
+            .hub-field
+              label(for='internEmail') Email
+              input#internEmail(type='email', required, autocomplete='off', placeholder='name@example.com')
+            .hub-field
+              label(for='internStartDate') Internship start date
+              input#internStartDate(type='date', required)
+            .hub-field
+              label(for='internEndDate') Internship end date
+              input#internEndDate(type='date', required)
+
+          p.hub-note An email is sent to the intern so they can set their own password.
+
+          button.hub-submit(type='submit') Register intern
+          p.form-status#intern-form-status(role='status', aria-live='polite')
+
+block scripts
+  script(src='/js/common.js')
+  script(src='/js/ui.js')
+  script(src='/js/authClient.js')
+  script(src='/js/hubMenu.js')
+  script(src='/js/registerIntern.js')
