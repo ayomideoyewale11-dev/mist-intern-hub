@@ -27,6 +27,7 @@
 .ui-btn-main.is-danger{ background: #A8391E; border-color: #A8391E; }
 .ui-btn-main.is-danger:hover{ background: #8a2f19; }
 .ui-btn:focus-visible{ outline: 2px solid #000; outline-offset: 3px; }
+.ui-dialog .ui-btn:focus:not(:focus-visible){ outline: none; box-shadow: none; }
 @media (min-width: 480px){ .ui-actions{ flex-direction: row; justify-content: flex-end; } .ui-btn{ min-width: 120px; } }
 
 /* ---------- Archive: feedback label in its own right-hand column ---------- */
