@@ -14,13 +14,30 @@ block content
         h1 Alumni
         p Interns whose internship has ended. Their accounts and task history are kept exactly as they were.
 
-      if everything > 5 || q
-        +searchBar('Search by name or email…', q, '', false, '', 'alumni')
+      form.arch-tools.alumni-tools(method='get', action='/alumni')
+        .arch-find
+          .arch-search
+            svg(width='18', height='18', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', aria-hidden='true')
+              circle(cx='11', cy='11', r='7')
+              path(d='M20 20l-4-4')
+            input(type='search', name='q', value=q, placeholder='Search by name or email…', aria-label='Search by name or email', maxlength='100', data-suggest='alumni')
+          button.list-go(type='submit') Search
+        .alumni-filter-row
+          label.audit-filter
+            span Left in
+            span.month-picker
+              span.month-picker-value= leftIn ? `${leftIn.slice(5, 7)}/${leftIn.slice(0, 4)}` : 'mm/yyyy'
+              svg(width='20', height='20', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', stroke-linejoin='round', aria-hidden='true')
+                rect(x='3', y='5', width='18', height='16', rx='2')
+                path(d='M16 3v4M8 3v4M3 10h18')
+              input#alumni-left-in(type='month', name='leftIn', value=leftIn, aria-label='Left in month and year')
+          if q || leftIn
+            a.hub-outline-link(href='/alumni') Clear
 
       if alumni.length === 0
-        p.tb-empty= q ? 'No alumni match your search.' : 'No one has finished their internship yet.'
+        p.tb-empty= (q || leftIn) ? 'No alumni match your filters.' : 'No one has finished their internship yet.'
       else
-        p.tb-count= `${total} ${total === 1 ? 'alumnus' : 'alumni'}${q ? ' found' : ''}`
+        p.tb-count= `${total} ${total === 1 ? 'alumnus' : 'alumni'}${(q || leftIn) ? ' found' : ''}`
 
         //- Wide table: tablet and up
         .tb-card.tb-wide
@@ -83,3 +100,4 @@ block scripts
   script(src='/js/authClient.js')
   script(src='/js/hubMenu.js')
   script(src='/js/listTools.js')
+  script(src='/js/alumniFilters.js')

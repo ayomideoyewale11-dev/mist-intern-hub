@@ -55,7 +55,12 @@ function ask(question) {
     return;
   }
 
-  await db.dropDatabase();
+  // Empty each collection instead of dropping the whole database. Dropping needs admin rights,
+  // which the app's database user (readWrite only, on purpose) does not have. The collections and
+  // their indexes stay, so the app is ready to use straight away.
+  for (const c of collections) {
+    await c.deleteMany({});
+  }
   console.log(
     `\nDone. "${name}" has been wiped. Restart the app, then create a new supervisor with scripts/createAdmin.js.`,
   );

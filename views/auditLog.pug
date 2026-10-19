@@ -28,6 +28,46 @@ block content
         h1 Audit log
         p A plain record of what has happened with your interns: who did it and when.
 
+      form.arch-tools.audit-tools(method='get', action='/audit-log')
+        .arch-find.audit-search-row
+          .arch-search
+            svg(width='18', height='18', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', aria-hidden='true')
+              circle(cx='11', cy='11', r='7')
+              path(d='M20 20l-4-4')
+            input(type='search', name='q', value=q, placeholder='Search intern or task name…', aria-label='Search intern or task name', maxlength='100')
+          button.list-go(type='submit') Search
+        .audit-toolbar-row
+          button.audit-filter-toggle(type='button', aria-expanded='false', aria-controls='audit-filter-panel')
+            svg(width='24', height='24', viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.8', stroke-linecap='round', aria-hidden='true')
+              path(d='M4 6h5m4 0h7M4 12h9m4 0h3M4 18h2m4 0h10')
+              circle(cx='11', cy='6', r='2')
+              circle(cx='15', cy='12', r='2')
+              circle(cx='8', cy='18', r='2')
+            span Filters
+            span.audit-filter-chevron(aria-hidden='true')
+          a.hub-outline-link.audit-download(href=exportHref) Download Logs
+
+          .audit-filter-popover#audit-filter-panel(role='dialog', aria-modal='true', aria-labelledby='audit-filter-title', hidden)
+            .audit-filter-mobile-head
+              h2#audit-filter-title Filters
+              button.audit-filter-close(type='button', aria-label='Close filters') ×
+            .audit-filter-grid
+              label.audit-filter
+                span Action
+                select(name='action', aria-label='Filter by action')
+                  option(value='') All actions
+                  each item in actions
+                    option(value=item, selected=action === item)= item.replace(/-/g, ' ').replace(/^./, (letter) => letter.toUpperCase())
+              label.audit-filter
+                span From
+                input(type='date', name='from', value=from, aria-label='From date')
+              label.audit-filter
+                span To
+                input(type='date', name='to', value=to, aria-label='To date')
+            .audit-actions
+              button.list-go(type='submit') Apply Filters
+              a.hub-outline-link(href=clearHref) Clear
+
       if entries.length === 0
         p.tb-empty Nothing has happened yet.
       else
@@ -85,12 +125,12 @@ block content
         if totalPages > 1
           nav.tb-pager(aria-label='Pages')
             if page > 1
-              a.tb-pg(href=`/audit-log?page=${page - 1}`) ← Newer
+              a.tb-pg(href=pageHref(page - 1)) ← Newer
             else
               span.tb-pg.is-off ← Newer
             span.tb-pg-info= `Page ${page} of ${totalPages}`
             if page < totalPages
-              a.tb-pg(href=`/audit-log?page=${page + 1}`) Older →
+              a.tb-pg(href=pageHref(page + 1)) Older →
             else
               span.tb-pg.is-off Older →
 
@@ -98,3 +138,4 @@ block scripts
   script(src='/js/ui.js')
   script(src='/js/authClient.js')
   script(src='/js/hubMenu.js')
+  script(src='/js/auditFilters.js')

@@ -35,7 +35,7 @@ block content
             .hub-row
               dt Terminated
               dd= `${intern.terminatedFormatted}. Reason: ${intern.terminationReason}`
-        a.hub-outline-link.hub-pdf(href=`/interns/${intern._id}/export.pdf`) Download as PDF
+        a.hub-outline-link.hub-pdf(href=`/interns/${intern._id}/export.pdf`) Download history
 
       if everything > 5 || q || status
         +searchBar('Search by task title…', q, status, true, back, 'history', String(intern._id))

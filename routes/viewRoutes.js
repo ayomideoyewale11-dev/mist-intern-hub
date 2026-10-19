@@ -38,6 +38,7 @@ router.get("/admin", ...admin, sweepEnded, dashboard.admin);
 router.get("/archive", ...admin, sweepEnded, archive.archive);
 router.get("/archive/export.pdf", ...admin, archive.exportPdf);
 router.get("/audit-log", ...admin, archive.auditLog);
+router.get("/audit-log/export.csv", ...admin, archive.exportAuditLog);
 router.get("/interns", ...admin, sweepEnded, interns.list);
 router.get("/interns/new", ...admin, interns.newForm); // before /interns/:id, or "new" would be read as an id
 router.get("/interns/:id/edit", ...admin, interns.edit);

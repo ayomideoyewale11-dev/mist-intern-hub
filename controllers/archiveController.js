@@ -181,7 +181,9 @@ const exportPdf = async (req, res) => {
 const auditLog = async (req, res) => {
   try {
     const page = parsePage(req.query.page);
-    const filter = { supervisor: req.session.userId };
+    const filters = auditFilters(req);
+    const filter = filters.filter;
+    const params = filters.params;
 
     const [entries, total] = await Promise.all([
       AuditLog.find(filter)
@@ -191,7 +193,10 @@ const auditLog = async (req, res) => {
       AuditLog.countDocuments(filter),
     ]);
     const totalPages = Math.max(1, Math.ceil(total / AUDIT_PAGE_SIZE));
-    if (page > totalPages) return res.redirect(`/audit-log?page=${totalPages}`);
+    if (page > totalPages) {
+      params.set("page", String(totalPages));
+      return res.redirect(`/audit-log?${params.toString()}`);
+    }
 
     res.render("auditLog", {
       title: "Audit log",
@@ -200,6 +205,19 @@ const auditLog = async (req, res) => {
       page,
       totalPages,
       total,
+      q: filters.q,
+      action: filters.action,
+      from: filters.from,
+      to: filters.to,
+      actions: AuditLog.schema.path("action").enumValues,
+      exportHref: `/audit-log/export.csv${params.toString() ? `?${params.toString()}` : ""}`,
+      clearHref: "/audit-log",
+      pageHref: (p) => {
+        const pageParams = new URLSearchParams(params);
+        if (p > 1) pageParams.set("page", String(p));
+        else pageParams.delete("page");
+        return `/audit-log${pageParams.toString() ? `?${pageParams.toString()}` : ""}`;
+      },
       entries: entries.map((e) => ({
         action: e.action,
         taskId: e.taskId,
@@ -222,4 +240,73 @@ const auditLog = async (req, res) => {
   }
 };
 
-module.exports = { archive, exportPdf, auditLog };
+function validDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return false;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function auditFilters(req) {
+  const q = String(req.query.q || "").trim().slice(0, 100);
+  const allowedActions = AuditLog.schema.path("action").enumValues;
+  const action = allowedActions.includes(req.query.action) ? req.query.action : "";
+  const from = validDate(req.query.from) ? req.query.from : "";
+  const to = validDate(req.query.to) ? req.query.to : "";
+  const filter = { supervisor: req.session.userId };
+  const conditions = [];
+  if (q) {
+    const re = new RegExp(escapeRegex(q), "i");
+    conditions.push({ $or: [{ internName: re }, { taskTitle: re }] });
+  }
+  if (action) filter.action = action;
+  if (from || to) {
+    const createdAt = {};
+    if (from) createdAt.$gte = new Date(`${from}T00:00:00.000Z`);
+    if (to) {
+      const end = new Date(`${to}T00:00:00.000Z`);
+      end.setUTCDate(end.getUTCDate() + 1);
+      createdAt.$lt = end;
+    }
+    filter.createdAt = createdAt;
+  }
+  if (conditions.length) filter.$and = conditions;
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (action) params.set("action", action);
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  return { filter, params, q, action, from, to };
+}
+
+function csvCell(value) {
+  let text = String(value ?? "");
+  if (/^[\s]*[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+/* GET /audit-log/export.csv — exports every row matching the current filters. */
+const exportAuditLog = async (req, res) => {
+  try {
+    const { filter } = auditFilters(req);
+    const entries = await AuditLog.find(filter).sort({ createdAt: -1 });
+    const rows = [
+      ["Date and time", "Subject", "Action", "Details", "Done by"],
+      ...entries.map((e) => [
+        new Date(e.createdAt).toLocaleString("en-GB"),
+        e.taskTitle || e.internName || "Unknown",
+        e.action.replace(/-/g, " "),
+        e.details || "",
+        e.performedByName,
+      ]),
+    ];
+    const csv = `\uFEFF${rows.map((row) => row.map(csvCell).join(",")).join("\r\n")}`;
+    res.set("Content-Type", "text/csv; charset=utf-8");
+    res.set("Content-Disposition", 'attachment; filename="audit-logs.csv"');
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Something went wrong.");
+  }
+};
+
+module.exports = { archive, exportPdf, auditLog, exportAuditLog };

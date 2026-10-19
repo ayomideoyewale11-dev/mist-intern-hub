@@ -43,7 +43,14 @@ function listParams(req) {
     ? req.query.status
     : "";
   const back = safeBack(req.query.back); // the page the person came from, for a Back link
-  return { page, q, status, back };
+  const rawLeftIn = String(req.query.leftIn || "");
+  const monthYear = /^(0[1-9]|1[0-2])\/(\d{4})$/.exec(rawLeftIn);
+  const leftIn = monthYear
+    ? `${monthYear[2]}-${monthYear[1]}`
+    : /^\d{4}-(0[1-9]|1[0-2])$/.test(rawLeftIn)
+      ? rawLeftIn
+      : "";
+  return { page, q, status, back, leftIn };
 }
 
 // Mongo condition matching one of the three computed task statuses
@@ -59,11 +66,12 @@ function statusCondition(status) {
 }
 
 // The address of page p, keeping the search and filter
-function pageHref(basePath, { q, status, back }, p) {
+function pageHref(basePath, { q, status, back, leftIn }, p) {
   const sp = new URLSearchParams();
   if (q) sp.set("q", q);
   if (status) sp.set("status", status);
   if (back) sp.set("back", back);
+  if (leftIn) sp.set("leftIn", leftIn);
   if (p > 1) sp.set("page", String(p));
   const s = sp.toString();
   return s ? `${basePath}?${s}` : basePath;

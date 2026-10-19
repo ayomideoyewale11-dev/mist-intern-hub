@@ -12,6 +12,29 @@
 .arch-search svg{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 .hub .arch-search input{ padding-left: 42px; }
 .hub .arch-tools select{ width: 100%; }
+.hub .audit-filter{ display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 600; }
+.hub .audit-filter span{ font-size: 0.875rem; }
+.hub .audit-filter input,
+.hub .audit-filter select{ min-width: 0; min-height: 48px; padding: 8px 12px; border: 1px solid #000; background: #fff; font: inherit; }
+.hub .audit-filter input[type="month"]{ width: 100%; }
+.hub .audit-tools,
+.hub .alumni-tools{ display: grid; grid-template-columns: minmax(0, 1fr); align-items: end; gap: 14px; }
+.hub .audit-tools .audit-search-row,
+.hub .alumni-tools .arch-find{ min-width: 0; width: 100%; }
+.audit-filter-grid{ display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.audit-actions{ display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.hub .audit-actions .list-go,
+.hub .audit-actions .hub-outline-link{ width: 100%; margin: 0; }
+.alumni-filter-row{ display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; }
+.hub .alumni-filter-row .audit-filter{ min-width: 0; }
+.hub .alumni-filter-row .hub-outline-link{ margin: 0; }
+.month-picker{ position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 0 12px; border: 1px solid #000; background: #fff; color: #555; font-weight: 400; }
+.month-picker-value{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.month-picker svg{ flex: none; }
+.hub .audit-filter .month-picker input[type="month"]{ position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+/* No grey ring when the box is clicked. Chrome's own small calendar icon is hidden: alumniFilters.js opens the
+   calendar when you click anywhere on the box, so the icon you can see is the one that works. */
+.hub .audit-filter .month-picker input[type="month"]::-webkit-calendar-picker-indicator{ display: none; }
 .hub a.hub-outline-link{
   display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px;
   border: 2px solid #000; background: #fff; color: #000; font-weight: 600; font-size: 1rem;
@@ -56,7 +79,18 @@ th.arch-due, td.arch-due{ display: none; }
   .arch-tools{ flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 16px; }
   .arch-find{ flex: 1 1 100%; }
   .hub .arch-tools select{ width: 220px; }
+  .hub .audit-filter{ min-width: 170px; }
+  .hub .audit-filter input[type="date"]{ width: 170px; }
+  .hub .audit-filter input[type="month"]{ width: 190px; }
   .arch-tools .hub-outline-link{ margin-left: auto; }
+  .hub .audit-tools{ grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .audit-filter-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .audit-actions{ display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+  .hub .audit-actions .list-go,
+  .hub .audit-actions .hub-outline-link{ width: auto; min-width: 110px; }
+  .hub .alumni-tools{ grid-template-columns: minmax(0, 1fr) auto; gap: 16px; }
+  .alumni-filter-row{ min-width: 0; }
+  .hub .alumni-filter-row .hub-outline-link{ margin: 0; }
   .arch-group summary{ padding: 14px 16px; }
   .arch-name{ font-size: 1.125rem; }
   th.arch-due, td.arch-due{ display: table-cell; width: 160px; }
@@ -65,6 +99,40 @@ th.arch-due, td.arch-due{ display: none; }
 }
 @media (min-width: 1100px){
   .arch-find{ flex: 1 1 0; }
+  .hub .audit-tools{ grid-template-columns: minmax(0, 1fr) auto; column-gap: 20px; }
+  .hub .audit-tools .audit-search-row{ grid-column: 1 / -1; }
+  .audit-filter-grid{ grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+  .audit-actions{ justify-content: flex-end; }
+  .hub .audit-actions .list-go,
+  .hub .audit-actions .hub-outline-link{ min-width: 112px; }
+}
+
+@media (max-width: 599px){
+  .hub .audit-tools{ gap: 12px; }
+  .hub .audit-tools .arch-find,
+  .hub .alumni-tools .arch-find{ gap: 8px; }
+  .hub .audit-tools .arch-find .list-go,
+  .hub .alumni-tools .arch-find .list-go{ flex: 0 0 auto; padding: 0 14px; }
+  .audit-filter-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .audit-filter-grid .audit-filter:first-child{ grid-column: 1 / -1; }
+  .audit-actions{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .hub .audit-actions .list-go{ grid-column: 1 / -1; }
+  .hub .audit-actions .hub-outline-link{ padding: 0 10px; font-size: 0.9375rem; }
+  .hub .alumni-tools{ gap: 12px; }
+  .alumni-filter-row{ grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .hub .alumni-filter-row .audit-filter input[type="month"]{ width: 100%; }
+}
+
+@media (max-width: 359px){
+  .hub .audit-tools .arch-find,
+  .hub .alumni-tools .arch-find{ flex-wrap: wrap; }
+  .hub .audit-tools .arch-find .arch-search,
+  .hub .audit-tools .arch-find .list-go,
+  .hub .alumni-tools .arch-find .arch-search,
+  .hub .alumni-tools .arch-find .list-go{ flex: 1 1 100%; }
+  .hub .audit-filter-grid{ grid-template-columns: minmax(0, 1fr); }
+  .hub .audit-filter-grid .audit-filter:first-child{ grid-column: auto; }
+  .alumni-filter-row{ grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Intern history, error page */
@@ -95,3 +163,112 @@ th.arch-due, td.arch-due{ display: none; }
 .hub a.hub-outline-link.mt-open{ min-height: 44px; padding: 0 20px; }
 @media (min-width: 768px){ .mt-list{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } .mt-card{ padding: 24px; } }
 @media (min-width: 1100px){ .mt-list{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* Audit-log filters: a floating panel on larger screens and a full-screen
+   filter view on phones. */
+.hub .audit-tools{ position: relative; display: flex; flex-direction: column; gap: 16px; }
+.hub .audit-tools .audit-search-row{ flex: none; width: 100%; }
+.hub .audit-toolbar-row{ position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 48px; }
+.hub .audit-filter-toggle{
+  display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 18px;
+  border: 2px solid #000; background: #fff; color: #000; font: inherit; font-weight: 600; cursor: pointer;
+}
+.hub .audit-filter-toggle:hover{ background: #F1ECEA; }
+.audit-filter-chevron{ display: none; width: 10px; height: 10px; margin-left: 4px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); }
+.hub .audit-filter-popover{
+  position: absolute; z-index: 30; top: calc(100% + 10px); left: 0; width: min(360px, calc(100vw - 36px));
+  padding: 20px; border: 2px solid #000; background: #fff; box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+.hub .audit-filter-popover[hidden]{ display: none !important; }
+.audit-filter-mobile-head{ display: none; }
+.audit-filter-grid{ display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.hub .audit-filter-grid .audit-filter{ min-width: 0; }
+.hub .audit-filter-grid .audit-filter input[type="date"],
+.hub .audit-filter-grid .audit-filter select{ width: 100%; }
+.audit-actions{ display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.hub .audit-actions .list-go,
+.hub .audit-actions .hub-outline-link{ width: 100%; margin: 0; }
+.hub .audit-actions .hub-outline-link{ min-height: 42px; }
+.hub .audit-download{ margin-left: auto; }
+
+@media (max-width: 767px){
+  .hub .audit-tools{ gap: 14px; }
+  .hub .audit-toolbar-row{ gap: 12px; }
+  .hub .audit-toolbar-row{ justify-content: flex-start; }
+  .hub .audit-filter-toggle{ min-width: 132px; justify-content: center; }
+  .audit-filter-chevron{ display: inline-block; }
+  .hub .audit-filter-popover{
+    position: fixed; z-index: 2000; inset: 0; width: auto; height: 100vh; height: 100dvh;
+    overflow-y: auto; padding: max(22px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+    border: 0; box-shadow: none;
+  }
+  .hub .audit-filter-popover{ text-align: left; }
+  .hub .audit-filter-mobile-head,
+  .hub .audit-filter-grid,
+  .hub .audit-actions{ margin-left: 0; }
+  .audit-filter-mobile-head{ display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+  .audit-filter-mobile-head h2{ margin: 0; font-size: 1.5rem; }
+  .hub .audit-filter-close{ display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid #000; background: #fff; color: #000; font-size: 1.75rem; line-height: 1; cursor: pointer; }
+  .hub .audit-filter-grid{ gap: 20px; }
+  .hub .audit-filter-grid .audit-filter input,
+  .hub .audit-filter-grid .audit-filter select{ min-height: 52px; }
+  .hub .audit-actions{ gap: 14px; margin-top: 28px; }
+  .hub .audit-actions .list-go{ min-height: 52px; }
+  .hub .audit-actions .hub-outline-link{ min-height: 46px; max-width: 180px; align-self: center; }
+  body.is-audit-filter-open{ overflow: hidden; }
+}
+
+@media (max-width: 359px){
+  .hub .audit-toolbar-row{ gap: 8px; }
+  .hub .audit-filter-toggle{ min-width: 0; padding: 0 12px; gap: 8px; }
+  .hub .audit-download{ padding: 0 12px; font-size: 0.9375rem; }
+  .hub .audit-filter-popover{ padding-left: 16px; padding-right: 16px; }
+}
+
+/* Audit log on phones, including the smallest ones.
+   Row 1: the search box and the Search button stay on one line.
+   Row 2: Filters sits at the left edge and Download Logs at the right edge, the same height.
+   (Before, the second row only took the width of its two buttons and was pushed to the right, so on
+   narrow phones the Filters button was cut off at the left edge of the screen.) */
+@media (max-width: 767px){
+  .hub .audit-tools .audit-search-row{ flex-wrap: nowrap; gap: 8px; }
+  .hub .audit-tools .audit-search-row .arch-search{ flex: 1 1 0; min-width: 0; }
+  .hub .audit-tools .audit-search-row .list-go{ flex: 0 0 auto; }
+  .hub .audit-toolbar-row{ box-sizing: border-box; width: 100%; align-self: stretch; align-items: stretch; justify-content: space-between; }
+  .hub .audit-toolbar-row .audit-filter-toggle,
+  .hub .audit-toolbar-row .audit-download{ flex: 0 1 auto; margin: 0; box-sizing: border-box; }
+  .audit-filter-chevron{ display: none; }
+}
+
+/* Smaller phones: slimmer buttons so Filters and Download Logs still fit side by side.
+   (The longer selector is needed because "a.hub-outline-link" above is more specific.) */
+@media (max-width: 359px){
+  .hub .audit-toolbar-row a.audit-download{ padding: 0 12px; font-size: 0.9375rem; }
+}
+
+/* Too narrow for the two buttons side by side: stack them, each the full width. */
+@media (max-width: 309px){
+  .hub .audit-toolbar-row{ flex-wrap: wrap; }
+  .hub .audit-toolbar-row .audit-filter-toggle,
+  .hub .audit-toolbar-row .audit-download{ flex: 1 1 100%; justify-content: center; }
+}
+
+/* Audit log on tablets and desktops.
+   Before, the Filters / Download Logs row only took the width of its two buttons and was pushed to the
+   right edge, so the filter panel opened from there and ran off the screen. Now the row spans the whole
+   width (Filters at the left, Download Logs at the right) and the panel opens under Filters, never wider
+   than the page. Action sits on its own line; From and To sit side by side. */
+@media (min-width: 768px){
+  .hub .audit-toolbar-row{ box-sizing: border-box; width: 100%; align-self: stretch; }
+  .hub .audit-filter-toggle,
+  .hub .audit-download{ flex: 0 0 auto; margin: 0; }
+  .hub .audit-filter-popover{ box-sizing: border-box; width: min(560px, 100%); max-height: calc(100vh - 160px); overflow-y: auto; }
+  .hub .audit-filter-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .hub .audit-filter-grid .audit-filter:first-child{ grid-column: 1 / -1; }
+  .hub .audit-filter-grid .audit-filter{ min-width: 0; }
+  .hub .audit-filter-grid .audit-filter input[type="date"],
+  .hub .audit-filter-grid .audit-filter select{ width: 100%; min-width: 0; }
+  .hub .audit-actions{ flex-direction: row; justify-content: flex-end; }
+  .hub .audit-actions .list-go,
+  .hub .audit-actions .hub-outline-link{ width: auto; min-width: 120px; }
+}

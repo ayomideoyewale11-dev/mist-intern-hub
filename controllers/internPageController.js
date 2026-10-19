@@ -278,15 +278,44 @@ const alumni = async (req, res) => {
       const re = new RegExp(escapeRegex(lp.q), "i");
       filter.$or = [{ name: re }, { email: re }];
     }
-    const [alumni, total, everything] = await Promise.all([
-      User.find(filter)
-        .select("name email internshipStartDate internshipEndDate terminatedAt")
-        .sort({ internshipEndDate: -1 })
-        .skip((lp.page - 1) * LIST_PAGE_SIZE)
-        .limit(LIST_PAGE_SIZE),
-      User.countDocuments(filter),
+    const pipeline = [
+      {
+        $match: {
+          ...filter,
+          supervisor: new mongoose.Types.ObjectId(req.session.userId),
+        },
+      },
+      { $addFields: { leftDate: { $ifNull: ["$terminatedAt", "$internshipEndDate"] } } },
+    ];
+    if (lp.leftIn) {
+      const [year, month] = lp.leftIn.split("-").map(Number);
+      pipeline.push({
+        $match: {
+          leftDate: {
+            $gte: new Date(Date.UTC(year, month - 1, 1)),
+            $lt: new Date(Date.UTC(year, month, 1)),
+          },
+        },
+      });
+    }
+    const [result, everything] = await Promise.all([
+      User.aggregate([
+        ...pipeline,
+        { $sort: { leftDate: -1, name: 1 } },
+        {
+          $facet: {
+            rows: [
+              { $skip: (lp.page - 1) * LIST_PAGE_SIZE },
+              { $limit: LIST_PAGE_SIZE },
+            ],
+            total: [{ $count: "n" }],
+          },
+        },
+      ]),
       User.countDocuments(base),
     ]);
+    const alumni = result[0].rows;
+    const total = result[0].total[0]?.n || 0;
 
     if (pastEnd(res, "/alumni", lp, total, LIST_PAGE_SIZE)) return;
 
@@ -295,6 +324,7 @@ const alumni = async (req, res) => {
       user: { role: "admin" },
       currentPath: req.path,
       q: lp.q,
+      leftIn: lp.leftIn,
       total,
       everything,
       pg: buildPager("/alumni", lp, total, LIST_PAGE_SIZE),
@@ -306,7 +336,7 @@ const alumni = async (req, res) => {
         startFormatted: a.internshipStartDate
           ? fmt(a.internshipStartDate)
           : "—",
-        endFormatted: a.internshipEndDate ? fmt(a.internshipEndDate) : "—",
+        endFormatted: a.leftDate ? fmt(a.leftDate) : "—",
       })),
     });
   } catch (err) {
