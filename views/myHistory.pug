@@ -27,7 +27,7 @@ block content
         a.hub-outline-link.hub-pdf.hub-pdf-top(href='/my-history/export.pdf') Download my record
 
       if everything > 5 || q || status
-        +searchBar('Search by task title…', q, status, true, '', 'history')
+        +searchBar('Search task title…', q, status, true, '', 'history')
 
       if tasks.length === 0
         p.tb-empty= (q || status) ? 'No tasks match.' : 'No task has been assigned to you yet.'

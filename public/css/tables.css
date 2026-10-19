@@ -71,6 +71,29 @@
   .tb{ font-size: 0.875rem; }
 }
 
+/* Audit log on phones: one stacked card per event, with room to breathe.
+   Order inside a card: when (small, grey) > what it was about (bold link) > the action pill and who did it
+   > the details. Every piece sits on its own line with the same gap between them. */
+.tb-audit-stack thead{ display: none; }
+.tb-audit-stack tbody tr{ display: block; padding: 20px 18px 22px; }
+.tb-audit-stack tbody tr + tr{ border-top: 1px solid #D9D2CF; }
+.tb-audit-stack tbody td{ display: block; padding: 0; border: 0; }
+.tb-audit-stack tbody td + td{ display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.tb-audit-stack .tb-audit-when{
+  margin: 0 0 12px; color: #6B6B6B; font-size: 0.875rem; font-weight: 500; line-height: 1.35;
+}
+.tb-audit-stack .tb-link,
+.tb-audit-stack td > span:not([class]){ font-size: 1.0625rem; line-height: 1.35; overflow-wrap: anywhere; }
+.tb-audit-stack .tb-line{
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 0;
+}
+.tb-audit-stack .tb-pill{ padding: 3px 12px; font-size: 0.875rem; }
+.tb-audit-stack .tb-audit-by{ color: #6B6B6B; font-size: 0.9375rem; }
+.tb-audit-stack .tb-sub{ margin-top: 0; font-size: 0.9375rem; line-height: 1.5; }
+@media (max-width: 359px){
+  .tb-audit-stack tbody tr{ padding: 18px 14px 20px; }
+}
+
 /* Interns page: count on the left, Register button on the right */
 .tb-bar{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .tb-bar .tb-count{ margin: 0; }

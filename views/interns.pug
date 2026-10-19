@@ -25,7 +25,7 @@ block content
           a.tb-btn(href='/interns/new') Register intern
 
         if everything > 5 || q
-          +searchBar('Search by name or email…', q, '', false, '', 'interns')
+          +searchBar('Search name or email…', q, '', false, '', 'interns')
 
         if interns.length === 0
           p.tb-empty= q ? 'No intern matches your search.' : 'You have no interns yet. Use "Register intern" to add one.'

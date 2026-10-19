@@ -105,7 +105,7 @@ block content
 
         //- Phones
         .tb-card.tb-narrow
-          table.tb
+          table.tb.tb-audit-stack
             thead
               tr
                 th(scope='col') When
@@ -113,14 +113,14 @@ block content
             tbody
               each entry in entries
                 tr
-                  td.tb-nowrap= entry.whenFormatted
+                  td.tb-audit-when= entry.whenFormatted
                   td
                     +subject(entry)
                     span.tb-line
                       +pill(entry)
+                      span.tb-audit-by= `by ${entry.performedByName}`
                     if entry.details
                       span.tb-sub= entry.details
-                    span.tb-sub= `by ${entry.performedByName}`
 
         if totalPages > 1
           nav.tb-pager(aria-label='Pages')

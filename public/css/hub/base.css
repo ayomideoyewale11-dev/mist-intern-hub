@@ -81,6 +81,28 @@
   border: 1.5px solid #000; border-radius: 0;
   font-family: inherit; font-size: 1rem;
 }
+/* iOS WebKit date/month widgets have a large intrinsic min-width and ignore
+   width: 100% unless min-width is forced. Chrome DevTools cannot show this. */
+.hub input[type="date"],
+.hub input[type="month"]{
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.hub input[type="date"]::-webkit-date-and-time-value,
+.hub input[type="month"]::-webkit-date-and-time-value{
+  min-width: 0;
+  text-align: left;
+}
+.hub input[type="date"]::-webkit-datetime-edit,
+.hub input[type="month"]::-webkit-datetime-edit{
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
 .hub input::placeholder, .hub textarea::placeholder{ color: #6B6B6B; opacity: 1; }
 .hub textarea{ height: auto; min-height: 140px; padding: 12px 14px; resize: vertical; }
 .hub select{

@@ -38,7 +38,7 @@ block content
         a.hub-outline-link.hub-pdf(href=`/interns/${intern._id}/export.pdf`) Download history
 
       if everything > 5 || q || status
-        +searchBar('Search by task title…', q, status, true, back, 'history', String(intern._id))
+        +searchBar('Search task title…', q, status, true, back, 'history', String(intern._id))
 
       if tasks.length === 0
         p.tb-empty= (q || status) ? 'No tasks match.' : 'No tasks have been assigned to this intern yet.'

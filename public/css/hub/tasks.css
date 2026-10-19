@@ -10,7 +10,17 @@
 .arch-find{ display: flex; gap: 12px; align-items: stretch; min-width: 0; }
 .arch-search{ position: relative; flex: 1; min-width: 0; }
 .arch-search svg{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
-.hub .arch-search input{ padding-left: 42px; }
+.hub .arch-search input{
+  padding-left: 42px; min-width: 0; text-overflow: ellipsis;
+}
+/* iOS search fields add extra inset and a rounded chrome; match the audit log control. */
+.hub .arch-search input[type="search"]{
+  appearance: none; -webkit-appearance: none; border-radius: 0;
+}
+.hub .arch-search input[type="search"]::-webkit-search-decoration,
+.hub .arch-search input[type="search"]::-webkit-search-cancel-button{
+  -webkit-appearance: none;
+}
 .hub .arch-tools select{ width: 100%; }
 .hub .audit-filter{ display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 600; }
 .hub .audit-filter span{ font-size: 0.875rem; }
@@ -107,12 +117,15 @@ th.arch-due, td.arch-due{ display: none; }
   .hub .audit-actions .hub-outline-link{ min-width: 112px; }
 }
 
+@media (max-width: 767px){
+  .arch-chips{ justify-content: center; }
+  .arch-find{ gap: 8px; flex-wrap: nowrap; }
+  .hub .arch-find .arch-search{ flex: 1 1 0; min-width: 0; }
+  .hub .arch-find .list-go{ flex: 0 0 auto; padding: 0 14px; }
+}
+
 @media (max-width: 599px){
   .hub .audit-tools{ gap: 12px; }
-  .hub .audit-tools .arch-find,
-  .hub .alumni-tools .arch-find{ gap: 8px; }
-  .hub .audit-tools .arch-find .list-go,
-  .hub .alumni-tools .arch-find .list-go{ flex: 0 0 auto; padding: 0 14px; }
   .audit-filter-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .audit-filter-grid .audit-filter:first-child{ grid-column: 1 / -1; }
   .audit-actions{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -124,12 +137,6 @@ th.arch-due, td.arch-due{ display: none; }
 }
 
 @media (max-width: 359px){
-  .hub .audit-tools .arch-find,
-  .hub .alumni-tools .arch-find{ flex-wrap: wrap; }
-  .hub .audit-tools .arch-find .arch-search,
-  .hub .audit-tools .arch-find .list-go,
-  .hub .alumni-tools .arch-find .arch-search,
-  .hub .alumni-tools .arch-find .list-go{ flex: 1 1 100%; }
   .hub .audit-filter-grid{ grid-template-columns: minmax(0, 1fr); }
   .hub .audit-filter-grid .audit-filter:first-child{ grid-column: auto; }
   .alumni-filter-row{ grid-template-columns: minmax(0, 1fr); }
@@ -140,13 +147,30 @@ th.arch-due, td.arch-due{ display: none; }
 .hub a.hub-pdf-top{ margin: -12px auto 24px; }
 .hub .err-actions{ text-align: center; margin-top: 8px; }
 
-/* back link above the title, left aligned */
-.hub-back-top{ text-align: left; margin: 0 0 12px; }
+/* "Back to ..." button above the page title (Edit intern, Intern history, Register intern, Task page).
+   An outlined button like the other secondary buttons (2px black border, white fill), the first thing on
+   the page, at the left edge of the content below it. It is as wide as its label, never full width, and
+   44px tall on every screen size so it is easy to tap on phones and still looks right with a mouse.
+   On pages whose content is a narrower centred card (820px) it lines up with the card's left edge. */
+.hub .hub-back-top{ text-align: left; margin: 0 0 20px; }
 .hub .hub-back-top a{
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; box-sizing: border-box;
-  border: 2px solid #000; background: #fff; color: #000; font-weight: 600; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; max-width: 100%; padding: 0 18px; box-sizing: border-box;
+  border: 2px solid #000; background: #fff; color: #000;
+  font-size: 1rem; font-weight: 600; line-height: 1.2; text-decoration: none;
 }
-.hub .hub-back-top a:hover{ background: #F1ECEA; }
+.hub .hub-back-top a:hover{ background: #F1ECEA; text-decoration: none; }
+.hub .hub-back-top a:active{ background: #E5DEDA; }
+.hub-main:has(> section.hub-narrow) > .hub-back-top{ max-width: 820px; margin-left: auto; margin-right: auto; }
+@media (min-width: 768px){
+  .hub .hub-back-top{ margin-bottom: 24px; }
+}
+@media (min-width: 1100px){
+  .hub .hub-back-top{ margin-bottom: 28px; }
+}
+@media (max-width: 359px){
+  .hub .hub-back-top a{ padding: 0 14px; font-size: 0.9375rem; }
+}
 
 /* ---------- My tasks (intern) ---------- */
 .hub .hub-empty{ text-align: center; color: #6B6B6B; font-size: 1.0625rem; padding: 40px 0; }
@@ -231,9 +255,6 @@ th.arch-due, td.arch-due{ display: none; }
    (Before, the second row only took the width of its two buttons and was pushed to the right, so on
    narrow phones the Filters button was cut off at the left edge of the screen.) */
 @media (max-width: 767px){
-  .hub .audit-tools .audit-search-row{ flex-wrap: nowrap; gap: 8px; }
-  .hub .audit-tools .audit-search-row .arch-search{ flex: 1 1 0; min-width: 0; }
-  .hub .audit-tools .audit-search-row .list-go{ flex: 0 0 auto; }
   .hub .audit-toolbar-row{ box-sizing: border-box; width: 100%; align-self: stretch; align-items: stretch; justify-content: space-between; }
   .hub .audit-toolbar-row .audit-filter-toggle,
   .hub .audit-toolbar-row .audit-download{ flex: 0 1 auto; margin: 0; box-sizing: border-box; }
@@ -271,4 +292,39 @@ th.arch-due, td.arch-due{ display: none; }
   .hub .audit-actions{ flex-direction: row; justify-content: flex-end; }
   .hub .audit-actions .list-go,
   .hub .audit-actions .hub-outline-link{ width: auto; min-width: 120px; }
+}
+
+/* Archive: the Open / Overdue / Submitted boxes on phones.
+   Three equal boxes across the full width, number on top and word below, so they are always centred and
+   never wrap into a lopsided second row. */
+@media (max-width: 767px){
+  .arch-chips{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; }
+  .arch-chip{
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    padding: 10px 6px; text-align: center; white-space: nowrap; font-size: 0.875rem; line-height: 1.2;
+  }
+  .arch-chip strong{ font-size: 1.375rem; line-height: 1.1; }
+}
+@media (min-width: 480px) and (max-width: 767px){
+  .arch-chips{ max-width: 520px; margin-left: auto; margin-right: auto; }
+}
+@media (max-width: 359px){
+  .arch-chips{ gap: 6px; }
+  .arch-chip{ padding: 8px 2px; font-size: 0.8125rem; }
+  .arch-chip strong{ font-size: 1.25rem; }
+}
+
+/* Search area on every list page (Audit log, Archive, Alumni, Interns, History) on phones:
+   the same gap between the search row, the filter and the buttons under it. */
+@media (max-width: 767px){
+  .hub .arch-tools{ gap: 14px; margin-bottom: 22px; }
+  .hub .arch-tools .hub-outline-link{ margin: 0; }
+}
+
+/* The search box and its Search button stay on one line on all phones. Only on a phone narrower than
+   300px (rare) is there not enough room, and the button goes under the box. */
+@media (max-width: 299px){
+  .hub .arch-find{ flex-wrap: wrap; }
+  .hub .arch-find .arch-search,
+  .hub .arch-find .list-go{ flex: 1 1 100%; }
 }
